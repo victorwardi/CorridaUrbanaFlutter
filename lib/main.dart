@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:corrida_urbana/post.dart';
 import 'package:corrida_urbana/screen/post_screen.dart';
 
+import 'screen/calendar_screen.dart';
+
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
@@ -17,8 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: new ThemeData(
         primarySwatch: Colors.teal,
+        backgroundColor: Colors.black26,
       ),
-      home: new MyHomePage(title: 'Corrida Urbana - News'),
+      // home: new MyHomePage(title: 'Corrida Urbana - News'),
+       home: new CalendarScreen(),
     );
   }
 }
@@ -35,18 +39,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final String url = "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed";
 
-  List posts;
+  Future<List> posts;
 
   @override
   void initState() {
     super.initState();
-    this._getData();
+
+    if(posts != null){
+      this._getData();
+    }
+
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     final Widget _getPosts = new FutureBuilder(
-      future: _getData(),
+      future: posts,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -82,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(e.toString());
     }
 
-  posts.forEach( (post) => print(post.image));
+  posts.asStream().forEach( (post) => print(post.elementAt(0).image));
 
 
     return posts;
