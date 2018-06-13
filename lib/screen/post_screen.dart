@@ -10,18 +10,54 @@ class PostDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(post.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(post.title),
       ),
-      body: new Container(
-        child: new Column(
+      body: Container(
+        child: Column(
           children: <Widget>[
-            new Image.network(post.image),
-            new HtmlView(data:post.content.replaceAll(new RegExp(r'<[^>]*>'), '')),
+            Stack(
+              alignment: Alignment(0.6, 0.9),
+              children: <Widget>[
+                DecoratedBox(
+                  child: Image.network(post.image),
+                  position: DecorationPosition.foreground,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: <Color>[
+                        Colors.black.withOpacity(1.0),
+                        Colors.black.withOpacity(0.25),
+                        Colors.white.withOpacity(0.0),
+                      ],
+                      //tileMode: TileMode.repeated
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    post.title,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                post.content,
+                overflow: TextOverflow.fade,
+              ),
+            ),
           ],
         ),
-      )
+      ),
     );
   }
 }
