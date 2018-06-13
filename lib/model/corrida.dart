@@ -39,7 +39,7 @@ class Corrida {
           }
         }  
 
-        break;      
+       // break;      
       }
     } catch (e) {
       print(e.toString());
@@ -53,5 +53,11 @@ return corridas;
 main() {
   Future<List<Corrida>>  corridasList = new Corrida().loadData();
 
-  print("Titulo: " + " -");
+  corridasList.then( (List<Corrida> corridas) {
+
+corridas.forEach( (f) => print(f.title) );
+
+  });
+
+  
 }
