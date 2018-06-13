@@ -12,7 +12,9 @@ class Corrida {
 
  
 
-  void loadData() async {
+  Future<List<Corrida>> loadData() async {
+
+    List<Corrida> corridas = new List<Corrida>();
 
     try {
       final response = await http.get("https://www.corridaurbana.com.br/wp-json/wp/v2/corrida?_embed");
@@ -43,14 +45,13 @@ class Corrida {
       print(e.toString());
     }
 
-print(this.title);
+return corridas;
     
   }
 }
 
 main() {
-  Corrida c = new Corrida();
-  c.loadData();
+  Future<List<Corrida>>  corridasList = new Corrida().loadData();
 
-  print("Titulo: " + " - ");
+  print("Titulo: " + " -");
 }
