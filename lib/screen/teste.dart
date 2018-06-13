@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 
-import '../post.dart';
+import '../model/corrida.dart';
 
 class TestWidget extends StatefulWidget {
   @override
   State createState() => new _testWidgetState();
+
+  main(List<String> args) {
+    print("object");
+  }
 }
 
 class _testWidgetState extends State<TestWidget> {
@@ -72,7 +76,7 @@ class _testWidgetState extends State<TestWidget> {
                 icon: new Icon(Icons.navigate_next),
                 onPressed: (() {
                   setState(() {
-                    _url = "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed";
+                    _url = "https://www.corridaurbana.com.br/wp-json/wp/v2/corrida?_embed";
                   });
                 }),
               ),
@@ -87,10 +91,18 @@ class _testWidgetState extends State<TestWidget> {
 
     List data = new List();
 
+
+
     try {
       final response = await http.get("https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed");
-      final responseJson = json.decode(response.body);
-      data = responseJson.map((post) => new Post.fromJson(post)).toList();
+      final Map responseJson = json.decode(response.body);
+responseJson.forEach((k,v) {
+
+  print("$k = $v");
+});
+
+
+     
     } catch (e) {
       print(e.toString());
     }

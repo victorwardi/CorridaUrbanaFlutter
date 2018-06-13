@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'posts_screen.dart';
 
+  const TextStyle _styleButton = TextStyle(fontSize: 18.0, color: Colors.white);
+  const double _iconSize = 50.0;
+
 class HomeScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,29 +14,39 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+          
           children: <Widget>[
-            RaisedButton.icon(
-              icon: Icon(Icons.directions_run),
-              label: Text("Corridas"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>  MyHomePage(title: 'Corrida Urbana -  s')),
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RaisedButton.icon(
+                icon: Icon(Icons.directions_run, size: _iconSize),
+                label: Text("Corridas", style: _styleButton,),
+                textTheme: ButtonTextTheme.accent,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>  MyHomePage(title: 'Corrida Urbana -  Corridas')),
+                  );
+                },
+              ),
             ),
-            RaisedButton.icon(
-              icon: Icon(Icons.list),
-              label: Text("Notícias"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyHomePage(title: 'Corrida Urbana -  s')),
-                );
-              },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RaisedButton.icon(
+                icon: Icon(Icons.list, size:_iconSize,),
+                label: Text("Notícias", style: _styleButton ),
+               color: Colors.teal,
+       
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(title: 'Corrida Urbana -  Notícias')),
+                  );
+                },
+              ),
             ),
           ],
         ),
