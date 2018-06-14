@@ -2,53 +2,48 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../dao/corrida_dao.dart';
+
 class Corrida {
-  String title;
-  String date;
+
+/*   "id": 12943,
+        "titulo": "Circuito das Estações 2018 - Primavera - RJ",
+        "link": "https://www.corridaurbana.com.br/corrida/circuito-das-estacoes-primavera-rj/",
+        "dia": "30",
+        "mes": "09",
+        "ano": "18",
+        "mesExtenso": "setembro",
+        "data": "30/09/18",
+        "cidade": " Rio de Janeiro",
+        "estado": "Rio de Janeiro",
+        "uf": "RJ",
+        "local": " Rio de Janeiro - RJ",
+        "endereco": "Aterro do Flamengo - Rio de Janeiro",
+        "imagem": false
+ */
+
+  String titulo;
   String estado;
-  List<String> distancias;
-
-  Corrida([this.title, this.date, this.estado, this.distancias]);
-
-  Future<List<Corrida>> loadData() async {
-    List<Corrida> corridas = new List<Corrida>();
-
-    try {
-      final response = await http
-          .get("https://www.corridaurbana.com.br/wp-json/wp/v2/corrida?_embed");
-      final responseJson = json.decode(response.body);
-
-      for (var corridaJson in responseJson) {
-        Corrida corrida = new Corrida();
-
-        corrida.title = corridaJson["title"]["rendered"];
-        var terms = corridaJson["_embedded"]["wp:term"];
-
-        for (var dados in terms) {
-          corrida.distancias = new List<String>();
-
-          for (var dado in dados) {
-            if (dado["taxonomy"] == "estado") {
-              corrida.estado = dado["name"];
-            }
-            if (dado["taxonomy"] == "distancia") {
-              corrida.distancias.add(dado["name"]);
-            }
-          }
-        }
-
-        corridas.add(corrida);
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-
-    return corridas;
-  }
+  String mes;
+  String mesExtenso;
+  String dia;
+  String data;
+  String cidade;
+  String uf;
+  String local;
+  String endereco;
+  String distancias;
+  String valor;
+  String site;
+  String horario;
+  double mapaLatitude;
+  double mapaLongitude;
+ 
 }
 
 main() {
-  Future<List<Corrida>> corridasList = new Corrida().loadData();
-  corridasList.then((List<Corrida> corridas) =>
-      corridas.forEach((corrida) => print(corrida.title)));
+  CorridaDao dao = new CorridaDao();
+  Future<List<Corrida>> corridasList = dao.getCorridasPorEstado('RJ');
+
+  corridasList.then((List<Corrida> corridas) =>corridas.forEach((corrida) => print(corrida.mapa)));
 }

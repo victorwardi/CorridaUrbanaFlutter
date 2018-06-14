@@ -97,8 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
                         new PostDetail(posts[index])));
-              },
-            ),
+              }, ),
             new Divider(
               height: 2.0,
             ),

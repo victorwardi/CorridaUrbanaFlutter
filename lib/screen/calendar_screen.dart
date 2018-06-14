@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
-import 'package:corrida_urbana/model/corrida.dart';
+import '../model/corrida.dart';
+
+import 'package:corrida_urbana/dao/corrida_dao.dart';
+
+import 'corrida_screen.dart';
 
 
 class CalendarScreen extends StatefulWidget {
@@ -14,11 +18,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
 Future<List<Corrida>> corridas;
 
+String _estado;
+
   @override
   void initState() {
     super.initState();
     setState(() {
-      this.corridas  = new Corrida().loadData();
+      this._estado = "RJ";
+      this.corridas  = new CorridaDao().getCorridasPorEstado(_estado);
     });
 
   }
@@ -57,16 +64,25 @@ Future<List<Corrida>> corridas;
 
 Widget _createListView(BuildContext context, List<Corrida> corridas) {
 
+
+
     return new ListView.builder(
       padding: new EdgeInsets.all(16.0),
       itemExtent: 80.0,
-      itemCount: corridas.length,
+      itemCount: corridas == null ? 0 :  corridas.length,
       itemBuilder: (BuildContext context, int index) {
         return new Column(
           children: <Widget>[
-            new ListTile(
-              title: new Text(corridas[index].title),              
-            ),
+             new ListTile(
+              title: new Text(corridas[index].titulo),              
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                        new CorridaDetail(corridas[index])));
+              },
+              ), 
             new Divider(
               height: 2.0,
             ),
