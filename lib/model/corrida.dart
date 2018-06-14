@@ -10,54 +10,45 @@ class Corrida {
 
   Corrida([this.title, this.date, this.estado, this.distancias]);
 
- 
-
   Future<List<Corrida>> loadData() async {
-
     List<Corrida> corridas = new List<Corrida>();
 
     try {
-      final response = await http.get("https://www.corridaurbana.com.br/wp-json/wp/v2/corrida?_embed");
+      final response = await http
+          .get("https://www.corridaurbana.com.br/wp-json/wp/v2/corrida?_embed");
       final responseJson = json.decode(response.body);
 
       for (var corridaJson in responseJson) {
+        Corrida corrida = new Corrida();
 
-        this.title = corridaJson["title"]["rendered"];
+        corrida.title = corridaJson["title"]["rendered"];
         var terms = corridaJson["_embedded"]["wp:term"];
 
         for (var dados in terms) {
-
-         this.distancias = new List<String>();
+          corrida.distancias = new List<String>();
 
           for (var dado in dados) {
             if (dado["taxonomy"] == "estado") {
-              this.estado = dado["name"];
+              corrida.estado = dado["name"];
             }
             if (dado["taxonomy"] == "distancia") {
-             this.distancias.add(dado["name"]);
+              corrida.distancias.add(dado["name"]);
             }
           }
-        }  
+        }
 
-       // break;      
+        corridas.add(corrida);
       }
     } catch (e) {
       print(e.toString());
     }
 
-return corridas;
-    
+    return corridas;
   }
 }
 
 main() {
-  Future<List<Corrida>>  corridasList = new Corrida().loadData();
-
-  corridasList.then( (List<Corrida> corridas) {
-
-corridas.forEach( (f) => print(f.title) );
-
-  });
-
-  
+  Future<List<Corrida>> corridasList = new Corrida().loadData();
+  corridasList.then((List<Corrida> corridas) =>
+      corridas.forEach((corrida) => print(corrida.title)));
 }

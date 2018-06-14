@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:corrida_urbana/post.dart';
+import 'package:corrida_urbana/model/post.dart';
 import 'package:corrida_urbana/screen/post_screen.dart';
 
 

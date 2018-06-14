@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:corrida_urbana/screen/teste.dart';
+import 'package:corrida_urbana/screen/home_screen.dart';
 
 void main() => runApp(new MyApp());
 
@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,       
         backgroundColor: Colors.black26,
       ),
-      // home: new HomeScreen(),
-      home: new TestWidget(),
+       home: new HomeScreen(),
+      //home: new TestWidget(),
     );
   }
 }

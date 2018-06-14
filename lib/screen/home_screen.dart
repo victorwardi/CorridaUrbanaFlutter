@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'posts_screen.dart';
+import 'package:corrida_urbana/screen/calendar_screen.dart';
 
   const TextStyle _styleButton = TextStyle(fontSize: 18.0, color: Colors.white);
   const double _iconSize = 50.0;
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>  MyHomePage(title: 'Corrida Urbana -  Corridas')),
+                         builder: (context) => CalendarScreen()),
                   );
                 },
               ),
@@ -43,7 +44,8 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MyHomePage(title: 'Corrida Urbana -  Notícias')),
+                       builder: (context) =>  MyHomePage(title: 'Corrida Urbana -  Corridas')),
+                       
                   );
                 },
               ),
