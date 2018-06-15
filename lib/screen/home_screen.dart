@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Corrida Urbana APP"),
       ),
-      backgroundColor: Colors.teal[900],
+
       
       body: Center(
         child: Column(

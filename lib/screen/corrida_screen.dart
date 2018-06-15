@@ -9,8 +9,6 @@ var MAP_API_KEY = "AIzaSyBTjNYNzWAsFzlgd7qewvbUBK87gidS-YA";
 class CorridaDetail extends StatefulWidget {
   final Corrida corrida;
 
-  Color _corIcone = Colors.teal[500];
-
   CorridaDetail(this.corrida);
 
   @override
@@ -28,8 +26,9 @@ class CorridaDetailState extends State<CorridaDetail> {
   @override
   initState() {
     super.initState();
-  
-    Location local = new Location(widget.corrida.mapaLatitude, widget.corrida.mapaLongitude);
+
+    Location local =
+        new Location(widget.corrida.mapaLatitude, widget.corrida.mapaLongitude);
     cameraPosition = new CameraPosition(local, 2.0);
 
     staticMapUri = staticMapProvider.getStaticUri(local, 12,
@@ -38,66 +37,79 @@ class CorridaDetailState extends State<CorridaDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var card = new SizedBox(
-      child: new Card(
-        child: new Column(
-          children: [
-            new ListTile(
-              title: new Text(
-                widget.corrida.titulo,
-                style: new TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-            new Divider(),
-            new InkWell(
-              child: new Center(
-                child: new Image.network(staticMapUri.toString()),
-              ),
-            ),
-            new ListTile(
-              title: new Text(
-                widget.corrida.data,
-                style: new TextStyle(fontWeight: FontWeight.w500),
-              ),
-              leading: new Icon(
-                Icons.date_range,
-                color: widget._corIcone,
-              ),
-            ),
-            new ListTile(
-              title: new Text(
-                widget.corrida.endereco,
-                style: new TextStyle(fontWeight: FontWeight.w500),
-              ),
-              subtitle: new Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new Text(widget.corrida.local),
-              ),
-              leading: new Icon(
-                Icons.location_on,
-                color: widget._corIcone,
-              ),
-            ),
-            new ListTile(
-              title: new Text(widget.corrida.distancias),
-              leading: new Icon(
-                Icons.directions,
-                color: widget._corIcone,
-              ),
-            ),
-          ],
-        ),
+    var map = new InkWell(
+      child: new Center(
+        child: new Image.network(staticMapUri.toString()),
       ),
+    );
+
+    var card = new Column(
+      children: [
+        new Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: new Text(
+            widget.corrida.titulo,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18.0,),
+          ),
+        ),
+        _itemCorrida("Data", widget.corrida.data, Icons.date_range),
+        _itemCorrida("Local", widget.corrida.local, Icons.place),
+        _itemCorrida("Horário", widget.corrida.horario, Icons.access_time),
+        _itemCorrida("Distância(s)", widget.corrida.distancias, Icons.directions_run),
+        _itemCorrida("Valor", widget.corrida.valor, Icons.monetization_on),
+      ],
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.corrida.titulo),
       ),
-      body: card,
+      body: SingleChildScrollView(child: card),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          new BottomNavigationBarItem(
+            icon: new Icon(Icons.local_activity),
+            title: new Text("Se Inscrever"),
+          ),
+          new BottomNavigationBarItem(
+            icon: new Icon(Icons.share),
+            title: new Text("Compartilhar"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _itemCorrida(String tipoItem, String item, IconData icon) {
+    return new Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: Row(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: new Icon(icon),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new Text(tipoItem),
+                ),
+              ],
+            ),
+          ),
+          new Expanded(
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(item),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

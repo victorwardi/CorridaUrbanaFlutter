@@ -45,5 +45,5 @@ main() {
   CorridaDao dao = new CorridaDao();
   Future<List<Corrida>> corridasList = dao.getCorridasPorEstado('RJ');
 
-  corridasList.then((List<Corrida> corridas) =>corridas.forEach((corrida) => print(corrida.mapa)));
+  corridasList.then((List<Corrida> corridas) =>corridas.forEach((corrida) => print(corrida.mapaLatitude )));
 }

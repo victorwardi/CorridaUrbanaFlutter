@@ -4,7 +4,6 @@ import 'package:corrida_urbana/model/post.dart';
 import 'package:flutter_html_view/flutter_html_view.dart';
 
 class PostDetail extends StatelessWidget {
-
   final Post post;
 
   PostDetail(this.post);
@@ -49,11 +48,17 @@ class PostDetail extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                post.content,
-                overflow: TextOverflow.fade,
+            SingleChildScrollView(
+              child: Column(
+
+                 children: <Widget>[
+
+                   Text(
+                     post.content,
+                   ),
+                 ],
+
+
               ),
             ),
           ],

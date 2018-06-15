@@ -8,28 +8,24 @@ import 'package:corrida_urbana/dao/corrida_dao.dart';
 
 import 'corrida_screen.dart';
 
-
 class CalendarScreen extends StatefulWidget {
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  Future<List<Corrida>> corridas;
 
-Future<List<Corrida>> corridas;
-
-String _estado;
+  String _estado;
 
   @override
   void initState() {
     super.initState();
     setState(() {
       this._estado = "RJ";
-      this.corridas  = new CorridaDao().getCorridasPorEstado(_estado);
+      this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +37,7 @@ String _estado;
     );
   }
 
-
- Widget _buildScreen(BuildContext context) {
+  Widget _buildScreen(BuildContext context) {
     return new Center(
       child: new FutureBuilder(
         future: this.corridas,
@@ -60,36 +55,46 @@ String _estado;
         },
       ),
     );
- }
-
-Widget _createListView(BuildContext context, List<Corrida> corridas) {
-
-
-
-    return new ListView.builder(
-      padding: new EdgeInsets.all(16.0),
-      itemExtent: 80.0,
-      itemCount: corridas == null ? 0 :  corridas.length,
-      itemBuilder: (BuildContext context, int index) {
-        return new Column(
-          children: <Widget>[
-             new ListTile(
-              title: new Text(corridas[index].titulo),              
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                        new CorridaDetail(corridas[index])));
-              },
-              ), 
-            new Divider(
-              height: 2.0,
-            ),
-          ],
-        );
-      },
-    );
   }
 
+  Widget _createListView(BuildContext context, List<Corrida> corridas) {
+    return new Container(
+      padding: const EdgeInsets.all(8.0),
+      child: new ListView.builder(
+        padding: new EdgeInsets.all(16.0),
+        itemExtent: 80.0,
+        itemCount: corridas == null ? 0 : corridas.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new Column(
+            children: <Widget>[
+              new ListTile(
+                title: new Text(corridas[index].titulo),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new CorridaDetail(corridas[index])));
+                },
+              ),
+              new Divider(
+                height: 2.0,
+              ),
+            ],
+          );
+        },
+      ),
+      decoration: new BoxDecoration(
+        gradient: new RadialGradient(
+          center: Alignment.center, 
+          radius: 1.0,
+          colors: [
+             Colors.blueGrey.withOpacity(0.5),
+              Colors.blueGrey.withOpacity(0.0),
+          ],
+         
+        ),
+      ),
+    );
+  }
 }
