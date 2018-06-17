@@ -43,29 +43,36 @@ class CorridaDetailState extends State<CorridaDetail> {
       ),
     );
 
-    var card = new Column(
-      children: [
-        new Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: new Text(
-            widget.corrida.titulo,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18.0,),
-          ),
+    var card = new Container(
+      
+      child: 
+        new Column(
+          children: [
+            new Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: new Text(
+                widget.corrida.titulo,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18.0,),
+              ),
+            ),
+            _itemCorrida("Data", widget.corrida.data, Icons.date_range),
+            _itemCorrida("Local", widget.corrida.local, Icons.place),
+            _itemCorrida("Horário", widget.corrida.horario, Icons.access_time),
+            _itemCorrida("Distância(s)", widget.corrida.distancias, Icons.directions_run),
+            _itemCorrida("Valor", widget.corrida.valor, Icons.monetization_on),
+            
+          ],
+          
         ),
-        _itemCorrida("Data", widget.corrida.data, Icons.date_range),
-        _itemCorrida("Local", widget.corrida.local, Icons.place),
-        _itemCorrida("Horário", widget.corrida.horario, Icons.access_time),
-        _itemCorrida("Distância(s)", widget.corrida.distancias, Icons.directions_run),
-        _itemCorrida("Valor", widget.corrida.valor, Icons.monetization_on),
-      ],
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.corrida.titulo),
       ),
-      body: SingleChildScrollView(child: card),
+      body: new Container ( child: card
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
@@ -82,7 +89,8 @@ class CorridaDetailState extends State<CorridaDetail> {
   }
 
   Widget _itemCorrida(String tipoItem, String item, IconData icon) {
-    return new Padding(
+    return item == "Verifique no site oficial."?  new Container( width: 0.0, height: 0.0,) : 
+    new Padding(
       padding: const EdgeInsets.all(16.0),
       child: new Row(
         children: <Widget>[

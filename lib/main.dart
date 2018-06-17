@@ -36,7 +36,19 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: new HomeScreen(),
+      home: new Container(child: HomeScreen(),
+       decoration: new BoxDecoration(
+        gradient: new RadialGradient(
+          center: Alignment.center, 
+          radius: 1.0,
+          colors: [
+             Colors.blueGrey.withOpacity(0.5),
+              Colors.blueGrey.withOpacity(0.0),
+          ],
+         
+        ),
+      ),
+      ),
       //home: new TestWidget(),
     );
   }

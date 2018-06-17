@@ -23,7 +23,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     super.initState();
     setState(() {
       this._estado = "RJ";
-      this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
+      this.corridas = new CorridaDao().getCorridasPorEstado(_estado) as Future<List<Corrida>>;
     });
   }
 
