@@ -23,7 +23,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   String _title = "Calendário - RJ";
 
   List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
-
+ 
   TextStyle _menuItemStyle =
       TextStyle(color: Colors.teal[900], fontWeight: FontWeight.bold);
 
