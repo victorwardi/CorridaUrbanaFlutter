@@ -8,8 +8,6 @@ import 'package:corrida_urbana/dao/corrida_dao.dart';
 
 import 'corrida_screen.dart';
 
-enum Estados { rio, sp }
-
 class CalendarScreen extends StatefulWidget {
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
