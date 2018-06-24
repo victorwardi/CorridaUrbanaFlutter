@@ -8,6 +8,8 @@ import 'package:corrida_urbana/dao/corrida_dao.dart';
 
 import 'corrida_screen.dart';
 
+import 'package:flutter/cupertino.dart';
+
 import 'package:carousel/carousel.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -51,7 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       //this.mesSelecionado = new Mes('01', 'JAN');
       this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
     });
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +110,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           )
         ],
       ),
-      body: new Center(child: test(context)),
+      body: new Center(child: _scroll()),
     );
   }
 
@@ -149,6 +151,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
         },
       ),
     );
+  }
+
+  Widget _scroll(){
+
+return CupertinoPicker(
+  itemExtent: 50.0,
+  children:  new List<Widget>.generate(12, (int index) {
+              return new Container(
+                
+                height: 50.0,
+               // color: const Color(0xFFFFFFFF),
+                child: Text(meses[index].nome, style: _menuItemStyle,),
+              );
+            }),
+);
+
   }
 
   Widget _corrida(Corrida corrida) {
