@@ -11,6 +11,7 @@ dependencies:
   http: "^0.11.3+16"
   flutter_html_view: "^0.5.2"
   map_view: "^0.0.12"
+  carousel: ^0.0.1
 
 dev_dependencies:
   flutter_test:

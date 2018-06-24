@@ -27,9 +27,10 @@ class CorridaDao {
 
     final responseJson = json.decode(response.body);  
 
-    print(responseJson);
+print(responseJson['status']);
+   
 
-    for (var corridaJson in responseJson) {
+    for (var corridaJson in responseJson['corridas']) {
       Corrida corrida = new Corrida();   
 
       corrida.titulo = corridaJson["titulo"];

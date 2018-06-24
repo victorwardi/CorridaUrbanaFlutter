@@ -8,6 +8,8 @@ import 'package:corrida_urbana/dao/corrida_dao.dart';
 
 import 'corrida_screen.dart';
 
+import 'package:carousel/carousel.dart';
+
 class CalendarScreen extends StatefulWidget {
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
@@ -21,20 +23,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
   String _title = "Calendário - RJ";
 
   List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
- 
+
+  List<Mes> meses = <Mes>[
+    Mes('01', 'JAN'),
+    Mes('02', 'FEV'),
+    Mes('03', 'MAR'),
+    Mes('04', 'ABR'),
+    Mes('05', 'MAI'),
+    Mes('06', 'JUN'),
+    Mes('07', 'JUL'),
+    Mes('08', 'AGO'),
+    Mes('09', 'SET'),
+    Mes('10', 'OUT'),
+    Mes('11', 'NOV'),
+    Mes('12', 'DEZ')
+  ];
+
   TextStyle _menuItemStyle =
       TextStyle(color: Colors.teal[900], fontWeight: FontWeight.bold);
+
+  Mes mesSelecionado;
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      //this.mesSelecionado = new Mes('01', 'JAN');
       this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(_title),
@@ -57,11 +81,77 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               );
             }).toList();
-          })
+          }),
+          // overflow menu
+          new PopupMenuButton<String>(onSelected: (String estadoSelected) {
+            setState(() {
+              print(estadoSelected);
+              this.corridas =
+                  new CorridaDao().getCorridasPorEstado(estadoSelected);
+              _title = 'Calendário  - $estadoSelected';
+            });
+          }, itemBuilder: (BuildContext context) {
+            return meses.map((Mes mes) {
+              return new PopupMenuItem<String>(
+                value: mes.numero,
+                child: new Text(
+                  mes.nome,
+                  style: _menuItemStyle,
+                ),
+              );
+            }).toList();
+          }),
+
+          new IconButton(
+            icon: Icon(Icons.filter),
+            onPressed: () {
+
+
+
+              showDialog(
+      context: context,
+      builder: (BuildContext context) => _filtros(context));
+              
+              
+            },
+          )
         ],
       ),
-      body: new Center(child: _buildScreen(context)),
+      body: new Center(child: test(context)),
     );
+  }
+
+  Widget _filtros(BuildContext context) {
+
+
+
+
+    
+    final SimpleDialog dialog = new SimpleDialog(
+      title: const Text('Select assignment'),
+      children: <Widget>[  
+
+           
+
+        
+
+
+
+
+
+
+
+        new SimpleDialogOption(
+          onPressed: () { Navigator.pop(context); },
+          child: test(context),
+        ),
+        new SimpleDialogOption(
+          onPressed: () {},
+          child: const Text('Text two'),
+        ),
+      ],
+    );
+    return dialog;
   }
 
   Widget _buildScreen(BuildContext context) {
@@ -89,6 +179,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Center(
         child: Row(
           children: <Widget>[
+             
+           
             Container(
               padding: const EdgeInsets.all(5.0),
               height: 50.0,
@@ -135,6 +227,49 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
+  Widget test(BuildContext context){
+print(meses.length);
+
+return
+
+new DropdownButton<Mes>(
+            hint: new Text("Selecione um mes"),
+            value: mesSelecionado,
+            onChanged: (Mes novoMes) {
+              setState(() {
+                mesSelecionado = novoMes;
+              });
+            },
+            items: meses.map((Mes mes) {
+              return new DropdownMenuItem<Mes>(
+                value: mes,
+                child: new Text(
+                  mes.nome,
+                  style: new TextStyle(color: Colors.black),
+                ),
+              );
+            }).toList(),
+
+
+       
+);
+
+  }
+
+  Widget getRow(int position) {
+    return new FlatButton(
+      child: new ListTile(
+        title: new Text(meses[position].nome),
+        trailing: new Text(meses[position].numero.toString()),
+      ),
+      onPressed: () {
+        setState(() {
+          meses.removeAt(position);
+        });
+      },
+    );
+  }
+
   Widget _createListView(BuildContext context, List<Corrida> corridas) {
     return new Container(
       padding: const EdgeInsets.only(top: 20.0),
@@ -173,4 +308,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
+}
+
+class Mes {
+  String numero;
+  String nome;
+
+  Mes(this.numero, this.nome);
 }
