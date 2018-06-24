@@ -55,10 +55,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(_title),
@@ -105,14 +101,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           new IconButton(
             icon: Icon(Icons.filter),
             onPressed: () {
-
-
-
               showDialog(
-      context: context,
-      builder: (BuildContext context) => _filtros(context));
-              
-              
+                  context: context,
+                  builder: (BuildContext context) => _filtros(context));
             },
           )
         ],
@@ -122,27 +113,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _filtros(BuildContext context) {
-
-
-
-
-    
     final SimpleDialog dialog = new SimpleDialog(
       title: const Text('Select assignment'),
-      children: <Widget>[  
-
-           
-
-        
-
-
-
-
-
-
-
+      children: <Widget>[
         new SimpleDialogOption(
-          onPressed: () { Navigator.pop(context); },
+          onPressed: () {
+            Navigator.pop(context);
+          },
           child: test(context),
         ),
         new SimpleDialogOption(
@@ -179,8 +156,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Center(
         child: Row(
           children: <Widget>[
-             
-           
             Container(
               padding: const EdgeInsets.all(5.0),
               height: 50.0,
@@ -227,33 +202,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget test(BuildContext context){
-print(meses.length);
+  Widget test(BuildContext context) {
+    print(meses.length);
 
-return
-
-new DropdownButton<Mes>(
-            hint: new Text("Selecione um mes"),
-            value: mesSelecionado,
-            onChanged: (Mes novoMes) {
-              setState(() {
-                mesSelecionado = novoMes;
-              });
-            },
-            items: meses.map((Mes mes) {
-              return new DropdownMenuItem<Mes>(
-                value: mes,
-                child: new Text(
-                  mes.nome,
-                  style: new TextStyle(color: Colors.black),
-                ),
-              );
-            }).toList(),
-
-
-       
-);
-
+    return new DropdownButton<Mes>(
+      hint: new Text("Selecione um mes"),
+      value: mesSelecionado,
+      onChanged: (Mes novoMes) {
+        setState(() {
+          mesSelecionado = novoMes;
+        });
+      },
+      items: meses.map((Mes mes) {
+        return new DropdownMenuItem<Mes>(
+          value: mes,
+          child: new Text(
+            mes.nome,
+            style: new TextStyle(color: Colors.black),
+          ),
+        );
+      }).toList(),
+    );
   }
 
   Widget getRow(int position) {
