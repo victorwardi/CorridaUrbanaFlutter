@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import '../model/corrida.dart';
+import '../model/mes.dart';
 
 import 'package:corrida_urbana/dao/corrida_dao.dart';
 
 import 'corrida_screen.dart';
+import 'calendar_filter_modal.dart';
 
 import 'package:flutter/cupertino.dart';
-
-import 'package:carousel/carousel.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -53,13 +53,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
       //this.mesSelecionado = new Mes('01', 'JAN');
       this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
     });
-  } 
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      floatingActionButton: CalendarFilter(),
       appBar: new AppBar(
         title: new Text(_title),
+      
         actions: <Widget>[
           // overflow menu
           new PopupMenuButton<String>(onSelected: (String estadoSelected) {
@@ -103,34 +108,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
           new IconButton(
             icon: Icon(Icons.filter),
             onPressed: () {
-              showDialog(
+              showModalBottomSheet<void>(
                   context: context,
-                  builder: (BuildContext context) => _filtros(context));
+                  builder: (BuildContext context) {
+                    return  Column(                      
+                      children: <Widget>[
+                        _showMesesSelection(context),
+                        _showUFSelection(context),
+                      ],
+                    );
+                  });
             },
           )
         ],
       ),
-      body: new Center(child: _scroll()),
+      body: new Center(child: _buildScreen(context)),
     );
-  }
-
-  Widget _filtros(BuildContext context) {
-    final SimpleDialog dialog = new SimpleDialog(
-      title: const Text('Select assignment'),
-      children: <Widget>[
-        new SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: test(context),
-        ),
-        new SimpleDialogOption(
-          onPressed: () {},
-          child: const Text('Text two'),
-        ),
-      ],
-    );
-    return dialog;
   }
 
   Widget _buildScreen(BuildContext context) {
@@ -151,22 +144,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
         },
       ),
     );
-  }
-
-  Widget _scroll(){
-
-return CupertinoPicker(
-  itemExtent: 50.0,
-  children:  new List<Widget>.generate(12, (int index) {
-              return new Container(
-                
-                height: 50.0,
-               // color: const Color(0xFFFFFFFF),
-                child: Text(meses[index].nome, style: _menuItemStyle,),
-              );
-            }),
-);
-
   }
 
   Widget _corrida(Corrida corrida) {
@@ -214,46 +191,11 @@ return CupertinoPicker(
                 ),
               ),
             ),
+          
           ],
+      
         ),
       ),
-    );
-  }
-
-  Widget test(BuildContext context) {
-    print(meses.length);
-
-    return new DropdownButton<Mes>(
-      hint: new Text("Selecione um mes"),
-      value: mesSelecionado,
-      onChanged: (Mes novoMes) {
-        setState(() {
-          mesSelecionado = novoMes;
-        });
-      },
-      items: meses.map((Mes mes) {
-        return new DropdownMenuItem<Mes>(
-          value: mes,
-          child: new Text(
-            mes.nome,
-            style: new TextStyle(color: Colors.black),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget getRow(int position) {
-    return new FlatButton(
-      child: new ListTile(
-        title: new Text(meses[position].nome),
-        trailing: new Text(meses[position].numero.toString()),
-      ),
-      onPressed: () {
-        setState(() {
-          meses.removeAt(position);
-        });
-      },
     );
   }
 
@@ -295,11 +237,89 @@ return CupertinoPicker(
       ),
     );
   }
-}
 
-class Mes {
-  String numero;
-  String nome;
-
-  Mes(this.numero, this.nome);
+  Widget _showMesesSelection(BuildContext context) {
+    return Container(
+      height: 150.0,
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: <Color>[
+                 Colors.white.withOpacity(1.0),                 
+                 Colors.white.withOpacity(1.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),               
+                  Colors.white.withOpacity(1.0),
+                  Colors.white.withOpacity(1.0),
+          ],
+          //tileMode: TileMode.repeated
+        ),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: new EdgeInsets.all(16.0),
+        itemExtent: 80.0,
+        itemCount: meses.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new Column(
+            children: <Widget>[
+              new ListTile(
+                  title: new Text(
+                    meses[index].nome,
+                    style: _menuItemStyle,
+                  ),
+                  onTap: () {}),
+             ],
+          );
+        },
+      ),
+    );
+  }
+  Widget _showUFSelection(BuildContext context) {
+    return Container(
+      height: 150.0,
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: <Color>[
+                 Colors.white.withOpacity(1.0),                 
+                 Colors.white.withOpacity(1.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),
+                  Colors.white.withOpacity(0.0),               
+                  Colors.white.withOpacity(1.0),
+                  Colors.white.withOpacity(1.0),
+          ],
+          //tileMode: TileMode.repeated
+        ),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: new EdgeInsets.all(16.0),
+        itemExtent: 80.0,
+        itemCount: _estados.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new Column(
+            children: <Widget>[
+              new ListTile(
+                  title: new Text(
+                    _estados[index],
+                    style: _menuItemStyle,
+                  ),
+                  onTap: () {}),
+             ],
+          );
+        },
+      ),
+    );
+  }
 }

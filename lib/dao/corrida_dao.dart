@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
 
 import '../model/corrida.dart';
 
@@ -12,7 +13,8 @@ class CorridaDao {
 
     try {
 
-      final response = await http.get("https://www.corridaurbana.com.br/wp-json/calendario/estado/" + estado);
+      //final response = await http.get("https://www.corridaurbana.com.br/wp-json/calendario/estado/" + estado);
+      final response = await rootBundle.loadString('assets/jsons/rj.json');
       corridas = _buildCorridaList(response);
 
     } catch (e) {
@@ -21,11 +23,11 @@ class CorridaDao {
     return corridas;
   }
 
-  List<Corrida> _buildCorridaList(http.Response response) {
+  List<Corrida> _buildCorridaList(String calendarioJson) {
 
     List<Corrida> corridas = new List<Corrida>();
 
-    final responseJson = json.decode(response.body);  
+    final responseJson = json.decode(calendarioJson);  
 
 print(responseJson['status']);
    

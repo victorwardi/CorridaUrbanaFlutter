@@ -1,0 +1,167 @@
+import 'package:flutter/material.dart';
+
+import 'dart:async';
+
+import '../model/corrida.dart';
+import '../model/mes.dart';
+
+import 'package:corrida_urbana/dao/corrida_dao.dart';
+
+import 'corrida_screen.dart';
+
+import 'package:flutter/cupertino.dart';
+
+class Modelo {
+ String _estado = "RJ";
+
+  String _title = "Calendário - RJ";
+
+  List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
+
+  final List<Mes> meses = <Mes>[
+    Mes('01', 'JAN'),
+    Mes('02', 'FEV'),
+    Mes('03', 'MAR'),
+    Mes('04', 'ABR'),
+    Mes('05', 'MAI'),
+    Mes('06', 'JUN'),
+    Mes('07', 'JUL'),
+    Mes('08', 'AGO'),
+    Mes('09', 'SET'),
+    Mes('10', 'OUT'),
+    Mes('11', 'NOV'),
+    Mes('12', 'DEZ')
+  ];
+
+  TextStyle _menuItemStyle =
+      TextStyle(color: Colors.teal[900], fontWeight: FontWeight.bold);
+
+  Mes mesSelecionado;
+
+  Widget _infinitList(BuildContext context) {
+    return Container(
+      height: 50.0,
+      color: Colors.red,
+      child: new ListView(
+        itemExtent: 50.0,
+        padding: const EdgeInsets.all(20.0),
+        children: <Widget>[
+          const Text('I\'m dedicating every day to you'),
+          const Text('Domestic life was never quite my style'),
+          const Text('When you smile, you knock me out, I fall apart'),
+          const Text('And I thought I was so smart'),
+        ],
+      ),
+    );
+  }
+
+  Widget _customView(BuildContext context) {
+    return Container(
+      height: 150.0,
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: <Color>[
+            Colors.teal[900].withOpacity(1.0),
+            Colors.teal[900].withOpacity(0.0),
+            Colors.teal[900].withOpacity(0.0),
+            Colors.teal[900].withOpacity(1.0),
+          ],
+          //tileMode: TileMode.repeated
+        ),
+      ),
+      padding: const EdgeInsets.all(8.0),
+      child: new CustomScrollView(
+        slivers: <Widget>[
+          new SliverFixedExtentList(
+            itemExtent: 50.0,
+            delegate: new SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return new Container(
+                  alignment: Alignment.center,
+                  child: new Text(meses[index].nome),
+                );
+              },
+              childCount: meses.length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _scroll() {
+    return CupertinoPicker(
+      itemExtent: 50.0,
+      children: new List<Widget>.generate(12, (int index) {
+        return new Container(
+          height: 50.0,
+          // color: const Color(0xFFFFFFFF),
+          child: Text(
+            meses[index].nome,
+            style: _menuItemStyle,
+          ),
+        );
+      }),
+    );
+  }
+}
+
+
+Widget _filtros(BuildContext context) {
+    final SimpleDialog dialog = new SimpleDialog(
+      title: const Text('Select assignment'),
+      children: <Widget>[
+        new SimpleDialogOption(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: test(context),
+        ),
+        new SimpleDialogOption(
+          onPressed: () {},
+          child: const Text('Text two'),
+        ),
+      ],
+    );
+    return dialog;
+  }
+
+Widget test(BuildContext context) {
+    print(meses.length);
+
+    return new DropdownButton<Mes>(
+      hint: new Text("Selecione um mes"),
+      value: mesSelecionado,
+      onChanged: (Mes novoMes) {
+        setState(() {
+          mesSelecionado = novoMes;
+        });
+      },
+      items: .map((Mes mes) {
+        return new DropdownMenuItem<Mes>(
+          value: mes,
+          child: new Text(
+            mes.nome,
+            style: new TextStyle(color: Colors.black),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget getRow(int position) {
+    return new FlatButton(
+      child: new ListTile(
+        title: new Text(meses[position].nome),
+        trailing: new Text(meses[position].numero.toString()),
+      ),
+      onPressed: () {
+        setState(() {
+          meses.removeAt(position);
+        });
+      },
+    );
+  }
