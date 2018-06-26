@@ -62,31 +62,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: new AppBar(
         title: new Text(_title),
         actions: <Widget>[
-          new FlatButton(
-            child: Text(_estado),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                           child: new ListView.builder(
-                        itemExtent: 20.0,
-                        itemCount: _estados == null ? 0 : _estados.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return new Column(
-                            children: <Widget>[
-                              new ListTile(
-                                title: Text(_estados[index], style: _menuItemStyle, textAlign: TextAlign.center,),
-                                onTap: () {},
-                              ),                             
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  });
-            },
-          ),
+          new PopupMenuButton<String>(
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Text('Trocar UF'),
+            ),
+        onSelected: (String estadoSelected) {
+            setState(() {
+              print(estadoSelected);
+              this.corridas =
+                  new CorridaDao().getCorridasPorEstado(estadoSelected);
+              _title = 'Calendário  - $estadoSelected';
+            });
+          }, itemBuilder: (BuildContext context) {
+            return _estados.map((String uf) {
+              return new PopupMenuItem<String>(
+                value: uf,
+                child: new Text(
+                  uf,
+                  style: _menuItemStyle,
+                ),
+              );
+            }).toList();
+          }),
         ],
       ),
       body: new Center(child: _buildScreen(context)),

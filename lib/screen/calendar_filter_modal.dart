@@ -35,10 +35,12 @@ List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
           child: new Icon(FontAwesomeIcons.calendar),
           onPressed: () {
               showDatePicker(
+                
+                initialDatePickerMode: DatePickerMode.day,
               context: context,
               initialDate: new DateTime.now(),
               firstDate: new DateTime.now().subtract(new Duration(days: 30)),
-              lastDate: new DateTime.now().add(new Duration(days: 30)),
+              lastDate: new DateTime.now().add(new Duration(days: 365)),
              // locale: brasil,
 
             );
@@ -46,32 +48,6 @@ List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
           }
       );
   }
-
-
-
-Widget _showMeses(BuildContext context) {
-   return null;
-  }
-
-
-    Widget _createMaterialAlertDialog(BuildContext context) {
-    return new AlertDialog(
-    title: new Text('Reset counter'),
-    content: new Text('Do you want to reset counter?'),
-    actions: <Widget>[
-      new MaterialButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: new Text('Cancel'),
-      ),
-      new MaterialButton(
-          onPressed: () {
-          },
-          child: new Text('OK')),
-    ],
-  );
-
-}
+ 
 
 }
