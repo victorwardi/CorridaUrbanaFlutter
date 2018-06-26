@@ -27,18 +27,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
   List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
 
   List<Mes> meses = <Mes>[
-    Mes('01', 'JAN'),
-    Mes('02', 'FEV'),
-    Mes('03', 'MAR'),
-    Mes('04', 'ABR'),
-    Mes('05', 'MAI'),
-    Mes('06', 'JUN'),
-    Mes('07', 'JUL'),
-    Mes('08', 'AGO'),
-    Mes('09', 'SET'),
-    Mes('10', 'OUT'),
-    Mes('11', 'NOV'),
-    Mes('12', 'DEZ')
+    Mes('01', 'JAN', 'Janeiro'),
+    Mes('02', 'FEV', 'Fevereiro'),
+    Mes('03', 'MAR', 'Março'),
+    Mes('04', 'ABR', 'Abril'),
+    Mes('05', 'MAI', 'Maio'),
+    Mes('06', 'JUN', 'Junho'),
+    Mes('07', 'JUL', 'Julho'),
+    Mes('08', 'AGO', 'Agosto'),
+    Mes('09', 'SET', 'Setembro'),
+    Mes('10', 'OUT', 'Outubro'),
+    Mes('11', 'NOV', 'Novembro'),
+    Mes('12', 'DEZ', 'Dezembro')
   ];
 
   TextStyle _menuItemStyle =
@@ -55,71 +55,38 @@ class _CalendarScreenState extends State<CalendarScreen> {
     });
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       floatingActionButton: CalendarFilter(),
       appBar: new AppBar(
         title: new Text(_title),
-      
         actions: <Widget>[
-          // overflow menu
-          new PopupMenuButton<String>(onSelected: (String estadoSelected) {
-            setState(() {
-              print(estadoSelected);
-              this.corridas =
-                  new CorridaDao().getCorridasPorEstado(estadoSelected);
-              _title = 'Calendário  - $estadoSelected';
-            });
-          }, itemBuilder: (BuildContext context) {
-            return _estados.map((String uf) {
-              return new PopupMenuItem<String>(
-                value: uf,
-                child: new Text(
-                  uf,
-                  style: _menuItemStyle,
-                ),
-              );
-            }).toList();
-          }),
-          // overflow menu
-          new PopupMenuButton<String>(onSelected: (String estadoSelected) {
-            setState(() {
-              print(estadoSelected);
-              this.corridas =
-                  new CorridaDao().getCorridasPorEstado(estadoSelected);
-              _title = 'Calendário  - $estadoSelected';
-            });
-          }, itemBuilder: (BuildContext context) {
-            return meses.map((Mes mes) {
-              return new PopupMenuItem<String>(
-                value: mes.numero,
-                child: new Text(
-                  mes.nome,
-                  style: _menuItemStyle,
-                ),
-              );
-            }).toList();
-          }),
-
-          new IconButton(
-            icon: Icon(Icons.filter),
+          new FlatButton(
+            child: Text(_estado),
             onPressed: () {
-              showModalBottomSheet<void>(
+              showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return  Column(                      
-                      children: <Widget>[
-                        _showMesesSelection(context),
-                        _showUFSelection(context),
-                      ],
+                    return Container(
+                           child: new ListView.builder(
+                        itemExtent: 20.0,
+                        itemCount: _estados == null ? 0 : _estados.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Column(
+                            children: <Widget>[
+                              new ListTile(
+                                title: Text(_estados[index], style: _menuItemStyle, textAlign: TextAlign.center,),
+                                onTap: () {},
+                              ),                             
+                            ],
+                          );
+                        },
+                      ),
                     );
                   });
             },
-          )
+          ),
         ],
       ),
       body: new Center(child: _buildScreen(context)),
@@ -191,9 +158,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ),
             ),
-          
           ],
-      
         ),
       ),
     );
@@ -247,14 +212,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: <Color>[
-                 Colors.white.withOpacity(1.0),                 
-                 Colors.white.withOpacity(1.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),               
-                  Colors.white.withOpacity(1.0),
-                  Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
           ],
           //tileMode: TileMode.repeated
         ),
@@ -274,12 +239,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: _menuItemStyle,
                   ),
                   onTap: () {}),
-             ],
+            ],
           );
         },
       ),
     );
   }
+
   Widget _showUFSelection(BuildContext context) {
     return Container(
       height: 150.0,
@@ -289,14 +255,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: <Color>[
-                 Colors.white.withOpacity(1.0),                 
-                 Colors.white.withOpacity(1.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),
-                  Colors.white.withOpacity(0.0),               
-                  Colors.white.withOpacity(1.0),
-                  Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(1.0),
+            Colors.white.withOpacity(1.0),
           ],
           //tileMode: TileMode.repeated
         ),
@@ -316,7 +282,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: _menuItemStyle,
                   ),
                   onTap: () {}),
-             ],
+            ],
           );
         },
       ),

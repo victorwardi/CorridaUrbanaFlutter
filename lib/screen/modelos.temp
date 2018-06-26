@@ -165,3 +165,43 @@ Widget test(BuildContext context) {
       },
     );
   }
+
+
+ // overflow menu
+          new PopupMenuButton<String>(onSelected: (String estadoSelected) {
+            setState(() {
+              print(estadoSelected);
+              this.corridas =
+                  new CorridaDao().getCorridasPorEstado(estadoSelected);
+              _title = 'Calendário  - $estadoSelected';
+            });
+          }, itemBuilder: (BuildContext context) {
+            return _estados.map((String uf) {
+              return new PopupMenuItem<String>(
+                value: uf,
+                child: new Text(
+                  uf,
+                  style: _menuItemStyle,
+                ),
+              );
+            }).toList();
+          }),
+          // overflow menu
+          new PopupMenuButton<String>(onSelected: (String estadoSelected) {
+            setState(() {
+              print(estadoSelected);
+              this.corridas =
+                  new CorridaDao().getCorridasPorEstado(estadoSelected);
+              _title = 'Calendário  - $estadoSelected';
+            });
+          }, itemBuilder: (BuildContext context) {
+            return meses.map((Mes mes) {
+              return new PopupMenuItem<String>(
+                value: mes.numero,
+                child: new Text(
+                  mes.nome,
+                  style: _menuItemStyle,
+                ),
+              );
+            }).toList();
+          }),
