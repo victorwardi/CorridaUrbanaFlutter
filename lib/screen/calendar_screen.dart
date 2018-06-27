@@ -46,12 +46,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Mes mesSelecionado;
 
+  CorridaDao corridaDao = new CorridaDao();
+
   @override
   void initState() {
     super.initState();
     setState(() {
       //this.mesSelecionado = new Mes('01', 'JAN');
-      this.corridas = new CorridaDao().getCorridasPorEstado(_estado);
+      this.corridas = corridaDao.getCorridasPorEstado(_estado);
     });
   }
 
@@ -63,28 +65,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
         title: new Text(_title),
         actions: <Widget>[
           new PopupMenuButton<String>(
-            child: Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Text('Trocar UF'),
-            ),
-        onSelected: (String estadoSelected) {
-            setState(() {
-              print(estadoSelected);
-              this.corridas =
-                  new CorridaDao().getCorridasPorEstado(estadoSelected);
-              _title = 'Calendário  - $estadoSelected';
-            });
-          }, itemBuilder: (BuildContext context) {
-            return _estados.map((String uf) {
-              return new PopupMenuItem<String>(
-                value: uf,
-                child: new Text(
-                  uf,
-                  style: _menuItemStyle,
-                ),
-              );
-            }).toList();
-          }),
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Text('Trocar UF'),
+              ),
+              onSelected: (String estadoSelected) {
+                setState(() {
+                  print(estadoSelected);
+                  this.corridas =
+                      new CorridaDao().getCorridasPorEstado(estadoSelected);
+                  _title = 'Calendário  - $estadoSelected';
+                });
+              },
+              itemBuilder: (BuildContext context) {
+                return _estados.map((String uf) {
+                  return new PopupMenuItem<String>(
+                    value: uf,
+                    child: new Text(
+                      uf,
+                      style: _menuItemStyle,
+                    ),
+                  );
+                }).toList();
+              }),
         ],
       ),
       body: new Center(child: _buildScreen(context)),
@@ -153,6 +156,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Text(
                   corrida.titulo,
                   softWrap: true,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -162,31 +169,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _createListView(BuildContext context, List<Corrida> corridas) {
+  Widget _createListView(BuildContext context, List<Corrida> todasCorridas) {
     return new Container(
       padding: const EdgeInsets.only(top: 20.0),
-      child: new ListView.builder(
-        itemExtent: 80.0,
-        itemCount: corridas == null ? 0 : corridas.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new Column(
-            children: <Widget>[
-              new ListTile(
-                title: _corrida(corridas[index]),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new CorridaDetail(corridas[index])));
-                },
-              ),
-              new Divider(
-                height: 2.0,
-              ),
-            ],
-          );
-        },
+      child: Column(
+        children: <Widget>[
+          new Meses(meses: meses,),
+        ],
       ),
       decoration: new BoxDecoration(
         gradient: new RadialGradient(
@@ -199,6 +188,74 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
       ),
     );
+  }
+
+  Widget _getCorridasMes(List<Corrida> todasCorridas, String mes) {
+
+    //List<Corrida> corridas = todasCorridas.where((c) => corridaDao.filtrarPorMes(c, '08')).toList();
+    List<Corrida> corridas = todasCorridas;
+
+    return new Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          ListView.builder(
+            itemExtent: 80.0,
+            itemCount: corridas == null ? 0 : corridas.length,
+            itemBuilder: (BuildContext context, int index) {
+              return new Column(
+                children: <Widget>[
+                  new ListTile(
+                    title: _corrida(corridas[index]),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new CorridaDetail(corridas[index])));
+                    },
+                  ),
+                  new Divider(
+                    height: 2.0,
+                  ),
+                ],
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+
+  Widget _testList(){
+
+return
+     ListView.builder(
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Header $index',
+                  style: Theme.of(context).textTheme.body2,
+                ),
+                ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text('Nested list item $index'),
+                    );
+                  },
+                  itemCount: 6, // this is a hardcoded value
+                ),
+              ],
+            ),
+          );
+        },
+        itemCount: 4, // this is a hardcoded value
+      );
   }
 
   Widget _showMesesSelection(BuildContext context) {
@@ -284,6 +341,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
           );
         },
       ),
+    );
+  }
+}
+
+class Meses extends StatelessWidget {
+  const Meses({
+    Key key,
+    @required this.meses,
+  }) : super(key: key);
+
+  final List<Mes> meses;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        new ListView.builder(
+          itemExtent: 80.0,
+          itemCount: meses == null ? 0 : meses.length,
+          itemBuilder: (BuildContext context, int index) {
+            return new Text('dois');
+          },
+        ),
+      ],
     );
   }
 }

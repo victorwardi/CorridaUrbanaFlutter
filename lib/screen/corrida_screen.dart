@@ -53,7 +53,7 @@ class CorridaDetailState extends State<CorridaDetail> {
               child: new Text(
                 widget.corrida.titulo,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18.0,),
+                style: TextStyle(fontSize: 18.0, color: Colors.red),
               ),
             ),
             _itemCorrida("Data", widget.corrida.data, Icons.date_range),

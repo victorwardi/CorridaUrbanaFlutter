@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primaryTextTheme: TextTheme(
             body1: TextStyle(
-              color: Colors.white,
+            //  color: Colors.white,
               fontSize: 22.0,
             ),
             title: TextStyle(
-              color: Colors.white,
+             // color: Colors.white,
               fontSize: 22.0,
             ),
         ),
@@ -27,11 +27,11 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.teal[900],
         textTheme: TextTheme(
           body1: TextStyle(
-            color: Colors.white,
+           // color: Colors.white,
             fontSize: 14.0,
           ),
           subhead:  TextStyle(
-            color: Colors.white,
+           // color: Colors.white,
             fontSize: 16.0,
           ),
         ),

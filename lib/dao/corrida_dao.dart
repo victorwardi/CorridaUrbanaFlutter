@@ -61,8 +61,9 @@ print(responseJson['status']);
       corridas.add(corrida);
     }
 
-corridas.forEach((corrida) => print(corrida.titulo));
-
     return corridas;
   }
+
+filtrarPorMes(Corrida corrida, String mes) => corrida.mes == mes ;
+
 }
