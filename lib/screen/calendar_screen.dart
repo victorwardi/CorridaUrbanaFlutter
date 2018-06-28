@@ -1,9 +1,11 @@
+import 'package:corrida_urbana/util/custom_decoration.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
 
 import '../model/corrida.dart';
 import '../model/mes.dart';
+import '../widget/meses_widget.dart';
 
 import 'package:corrida_urbana/dao/corrida_dao.dart';
 
@@ -26,7 +28,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   List<String> _estados = ['RJ', 'SP', 'DF', 'MG'];
 
-  List<Mes> meses = <Mes>[
+  CorridaDao corridaDao = new CorridaDao();
+
+ List<Mes> meses = <Mes>[
     Mes('01', 'JAN', 'Janeiro'),
     Mes('02', 'FEV', 'Fevereiro'),
     Mes('03', 'MAR', 'Março'),
@@ -40,13 +44,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     Mes('11', 'NOV', 'Novembro'),
     Mes('12', 'DEZ', 'Dezembro')
   ];
-
-  TextStyle _menuItemStyle =
-      TextStyle(color: Colors.teal[900], fontWeight: FontWeight.bold);
-
-  Mes mesSelecionado;
-
-  CorridaDao corridaDao = new CorridaDao();
 
   @override
   void initState() {
@@ -83,14 +80,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     value: uf,
                     child: new Text(
                       uf,
-                      style: _menuItemStyle,
                     ),
                   );
                 }).toList();
               }),
         ],
       ),
-      body: new Center(child: _buildScreen(context)),
+      body: _buildScreen(context),
     );
   }
 
@@ -114,257 +110,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _corrida(Corrida corrida) {
-    return Container(
-      child: Center(
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              height: 50.0,
-              width: 50.0,
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    corrida.dia,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    corrida.mesExtenso.substring(0, 3).toUpperCase(),
-                    style: TextStyle(
-                        color: Colors.teal[900],
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5.0),
-                  ),
-                ),
-              ),
-            ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  corrida.titulo,
-                  softWrap: true,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+ 
 
   Widget _createListView(BuildContext context, List<Corrida> todasCorridas) {
+ 
     return new Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
-          new Meses(meses: meses,),
+          new CorridasMeses(corridas: todasCorridas, meses : meses),
         ],
       ),
-      decoration: new BoxDecoration(
-        gradient: new RadialGradient(
-          center: Alignment.center,
-          radius: 1.0,
-          colors: [
-            Colors.blueGrey.withOpacity(0.5),
-            Colors.blueGrey.withOpacity(0.0),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _getCorridasMes(List<Corrida> todasCorridas, String mes) {
-
-    //List<Corrida> corridas = todasCorridas.where((c) => corridaDao.filtrarPorMes(c, '08')).toList();
-    List<Corrida> corridas = todasCorridas;
-
-    return new Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          ListView.builder(
-            itemExtent: 80.0,
-            itemCount: corridas == null ? 0 : corridas.length,
-            itemBuilder: (BuildContext context, int index) {
-              return new Column(
-                children: <Widget>[
-                  new ListTile(
-                    title: _corrida(corridas[index]),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  new CorridaDetail(corridas[index])));
-                    },
-                  ),
-                  new Divider(
-                    height: 2.0,
-                  ),
-                ],
-              );
-            },
-          )
-        ],
-      ),
+      decoration: UtilDecoration.gradientBackgroundLight ,
     );
   }
 
 
-  Widget _testList(){
 
-return
-     ListView.builder(
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Header $index',
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text('Nested list item $index'),
-                    );
-                  },
-                  itemCount: 6, // this is a hardcoded value
-                ),
-              ],
-            ),
-          );
-        },
-        itemCount: 4, // this is a hardcoded value
-      );
-  }
+  
+  
 
-  Widget _showMesesSelection(BuildContext context) {
-    return Container(
-      height: 150.0,
-      foregroundDecoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: <Color>[
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(1.0),
-          ],
-          //tileMode: TileMode.repeated
-        ),
-      ),
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: new EdgeInsets.all(16.0),
-        itemExtent: 80.0,
-        itemCount: meses.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new Column(
-            children: <Widget>[
-              new ListTile(
-                  title: new Text(
-                    meses[index].nome,
-                    style: _menuItemStyle,
-                  ),
-                  onTap: () {}),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _showUFSelection(BuildContext context) {
-    return Container(
-      height: 150.0,
-      foregroundDecoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: <Color>[
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(0.0),
-            Colors.white.withOpacity(1.0),
-            Colors.white.withOpacity(1.0),
-          ],
-          //tileMode: TileMode.repeated
-        ),
-      ),
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: new EdgeInsets.all(16.0),
-        itemExtent: 80.0,
-        itemCount: _estados.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new Column(
-            children: <Widget>[
-              new ListTile(
-                  title: new Text(
-                    _estados[index],
-                    style: _menuItemStyle,
-                  ),
-                  onTap: () {}),
-            ],
-          );
-        },
-      ),
-    );
-  }
 }
 
-class Meses extends StatelessWidget {
-  const Meses({
-    Key key,
-    @required this.meses,
-  }) : super(key: key);
 
-  final List<Mes> meses;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        new ListView.builder(
-          itemExtent: 80.0,
-          itemCount: meses == null ? 0 : meses.length,
-          itemBuilder: (BuildContext context, int index) {
-            return new Text('dois');
-          },
-        ),
-      ],
-    );
-  }
-}
