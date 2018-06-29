@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:map_view/map_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 import '../model/corrida.dart';
-
-import 'package:map_view/map_view.dart';
 
 var MAP_API_KEY = "AIzaSyBTjNYNzWAsFzlgd7qewvbUBK87gidS-YA";
 
@@ -44,80 +45,115 @@ class CorridaDetailState extends State<CorridaDetail> {
     );
 
     var card = new Container(
-      
-      child: 
-        new Column(
-          children: [
-            new Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: new Text(
-                widget.corrida.titulo,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18.0, color: Colors.red),
-              ),
+      child: new Column(
+        children: [
+          new Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: new Text(
+              widget.corrida.titulo,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22.0,
+                  color: Colors.teal[900]),
             ),
-            _itemCorrida("Data", widget.corrida.data, Icons.date_range),
-            _itemCorrida("Local", widget.corrida.local, Icons.place),
-            _itemCorrida("Horário", widget.corrida.horario, Icons.access_time),
-            _itemCorrida("Distância(s)", widget.corrida.distancias, Icons.directions_run),
-            _itemCorrida("Valor", widget.corrida.valor, Icons.monetization_on),
-            
-          ],
-          
-        ),
+          ),
+          _itemCorrida("Data", widget.corrida.data, Icons.date_range),
+          _itemCorrida("Local", widget.corrida.local, Icons.place),
+          _itemCorrida("Horário", widget.corrida.horario, Icons.access_time),
+          _itemCorrida("Distância(s)", widget.corrida.distancias, Icons.directions_run),
+          _itemCorrida("Valor", widget.corrida.valor, Icons.monetization_on),
+        ],
+      ),
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.corrida.titulo),
-      ),
-      body: new Container ( child: card
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          new BottomNavigationBarItem(
-            icon: new Icon(Icons.local_activity),
-            title: new Text("Se Inscrever"),
-          ),
-          new BottomNavigationBarItem(
-            icon: new Icon(Icons.share),
-            title: new Text("Compartilhar"),
+        actions: <Widget>[
+          new IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              Share.share('Se inscreva na corrida: $widget.corrida.site');
+            },
           ),
         ],
       ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(child: card),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton.icon(
+                  icon: new Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Icon(
+                      Icons.local_activity,
+                      size: 20.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  label: Text(
+                    "Inscreva-se",
+                   style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  color: Colors.teal,               
+                  onPressed: () {
+                    _launchURL(widget.corrida.site);
+                  },
+                ),
+          )
+        ],
+      ),
+     
     );
   }
 
   Widget _itemCorrida(String tipoItem, String item, IconData icon) {
-    return item == "Verifique no site oficial."?  new Container( width: 0.0, height: 0.0,) : 
-    new Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: Row(
+    return item == "Verifique no site oficial."
+        ? new Container(
+            width: 0.0,
+            height: 0.0,
+          )
+        : new Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: new Row(
               children: <Widget>[
-                new Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: new Icon(icon),
+                new Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      new Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: new Icon(icon),
+                      ),
+                      new Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new Text(tipoItem),
+                      ),
+                    ],
+                  ),
                 ),
-                new Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: new Text(tipoItem),
+                new Expanded(
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(item),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-          new Expanded(
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Text(item),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+          );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

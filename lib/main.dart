@@ -20,6 +20,10 @@ class MyApp extends StatelessWidget {
 
     
      primarySwatch: Colors.teal,
+     textTheme: TextTheme(
+       body1: TextStyle(fontSize: 18.0),
+       display1:  TextStyle(fontSize: 70.0)
+     ),
 
     );
   }

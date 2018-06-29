@@ -1,18 +1,14 @@
-import 'package:corrida_urbana/util/custom_decoration.dart';
-import 'package:flutter/material.dart';
-
 import 'dart:async';
+
+import 'package:corrida_urbana/dao/corrida_dao.dart';
+import 'package:corrida_urbana/util/custom_decoration.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../model/corrida.dart';
 import '../model/mes.dart';
 import '../widget/meses_widget.dart';
-
-import 'package:corrida_urbana/dao/corrida_dao.dart';
-
-import 'corrida_screen.dart';
 import 'calendar_filter_modal.dart';
-
-import 'package:flutter/cupertino.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -30,7 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   CorridaDao corridaDao = new CorridaDao();
 
- List<Mes> meses = <Mes>[
+  List<Mes> meses = <Mes>[
     Mes('01', 'JAN', 'Janeiro'),
     Mes('02', 'FEV', 'Fevereiro'),
     Mes('03', 'MAR', 'Março'),
@@ -62,13 +58,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
         title: new Text(_title),
         actions: <Widget>[
           new PopupMenuButton<String>(
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Text('Trocar UF'),
+              padding: EdgeInsets.zero,
+              tooltip: 'Clique aqui para mudar o estado.',
+              child: Column(
+        
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left:20.0, right: 20.0),
+                    child: Text(
+                      'Trocar UF',
+
+                      style: TextStyle(
+                       
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.orangeAccent),
+                    ),
+                  ),
+                ],
               ),
               onSelected: (String estadoSelected) {
                 setState(() {
-                  print(estadoSelected);
                   this.corridas =
                       new CorridaDao().getCorridasPorEstado(estadoSelected);
                   _title = 'Calendário  - $estadoSelected';
@@ -78,9 +89,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 return _estados.map((String uf) {
                   return new PopupMenuItem<String>(
                     value: uf,
-                    child: new Text(
-                      uf,
-                    ),
+                    child: new Text(uf),
                   );
                 }).toList();
               }),
@@ -110,27 +119,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
- 
-
   Widget _createListView(BuildContext context, List<Corrida> todasCorridas) {
- 
     return new Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
-          new CorridasMeses(corridas: todasCorridas, meses : meses),
+          new CorridasMeses(corridas: todasCorridas, meses: meses),
         ],
       ),
-      decoration: UtilDecoration.gradientBackgroundLight ,
+      decoration: UtilDecoration.gradientBackgroundLight,
     );
   }
-
-
-
-  
-  
-
 }
-
-
-

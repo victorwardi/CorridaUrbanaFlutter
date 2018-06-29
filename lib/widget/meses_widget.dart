@@ -6,25 +6,31 @@ import 'package:flutter/material.dart';
 
 CorridaDao corridaDao = new CorridaDao();
 
+
 class CorridasMeses extends StatelessWidget {
   const CorridasMeses({
     Key key,
     @required this.corridas,
     @required this.meses,
+  
   }) : super(key: key);
 
   final List<Mes> meses;
   final List<Corrida> corridas;
+
+ 
 
   @override
   Widget build(BuildContext context) {
     return Expanded(child: getListExpansion());
   }
 
-
-
 //show runs in a Expandable List
   Widget getListExpansion() {
+     
+    //show open only the first month  
+    bool mostraCorridas = true;
+
     return new ListView.builder(
       shrinkWrap: true,
       itemCount: meses == null ? 0 : meses.length,
@@ -35,30 +41,38 @@ class CorridasMeses extends StatelessWidget {
             .where((c) => corridaDao.filtrarPorMes(c, meses[index].numero))
             .toList();
 
-        return corridasMes.length == 0
-            ? Container(width: 0.0, height: 0.0)
-            : Column(
-                children: <Widget>[
-                  ExpansionTile(
-                   
-                    leading: Icon(Icons.date_range),
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Text(
-                            meses[index].nome,
-                            style: TextStyle(
-                                fontSize: 25.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
+        if (corridasMes.length != 0) {
+          var retorno = Column(
+            children: <Widget>[
+              ExpansionTile(
+                initiallyExpanded: mostraCorridas,
+                leading: Icon(Icons.date_range),
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Text(
+                        meses[index].nome,
+                        style: TextStyle(
+                            fontSize: 25.0, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    children: <Widget>[getListViewCorridasPorMes(corridasMes)],
                   ),
+                ),
+                children: <Widget>[
+                  getListViewCorridasPorMes(corridasMes),
                 ],
-              );
+              ),
+            ],
+          );
+
+          //close all otther months
+          mostraCorridas = false;
+          return retorno;
+        } else {
+          return Container(width: 0.0, height: 0.0);
+        }
       },
     );
   }
@@ -148,8 +162,6 @@ class CorridasMeses extends StatelessWidget {
     );
   }
 
-
-
 //Show  runs  in a list view - this is not used
   Widget getListView() {
     return new ListView.builder(
@@ -186,6 +198,4 @@ class CorridasMeses extends StatelessWidget {
       },
     );
   }
-
-
 }

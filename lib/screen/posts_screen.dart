@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 import 'package:corrida_urbana/model/post.dart';
 import 'package:corrida_urbana/screen/post_screen.dart';
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -18,8 +20,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String url =  "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed";
-
+  final String url =
+      "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed&fields=title,link,_embedded.wp:featuredmedia";
 
   Future<List> postsInternet;
 
@@ -27,14 +29,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     setState(() {
-      this.postsInternet  = this._getPosts();
+      this.postsInternet = this._getPosts();
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
@@ -55,33 +55,33 @@ class _MyHomePageState extends State<MyHomePage> {
             if (snapshot.hasError)
               return new Text('Error: ${snapshot.error}');
             else
-              return _createListView(context, snapshot.data);
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _createListView(context, snapshot.data),
+              );
         }
       },
     );
-
-
   }
 
   Future<List> _getPosts() async {
-
     List posts = new List();
 
     try {
-      final response = await http.get(url);
-      final responseJson = json.decode(response.body);
+      //  final response = await http.get(url);
+
+      final response = await rootBundle.loadString('assets/jsons/posts.json');
+
+      final responseJson = json.decode(response);
       posts = responseJson.map((post) => new Post.fromJson(post)).toList();
     } catch (e) {
       print(e.toString());
     }
 
-    return posts ;
+    return posts;
   }
 
-
-
   Widget _createListView(BuildContext context, List posts) {
-
     return new ListView.builder(
       padding: new EdgeInsets.all(16.0),
       itemExtent: 80.0,
@@ -89,21 +89,68 @@ class _MyHomePageState extends State<MyHomePage> {
       itemBuilder: (BuildContext context, int index) {
         return new Column(
           children: <Widget>[
-            new ListTile(
-              title: new Text(posts[index].title),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                        new PostDetail(posts[index])));
-              }, ),
-            new Divider(
-              height: 2.0,
+            new Card(
+
+              child: new Column(
+
+               // mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  ListTile(
+
+                     leading: DecoratedBox(
+                      child: Image.network(posts[index].image),
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: <Color>[
+                            Colors.black.withOpacity(1.0),
+                            Colors.black.withOpacity(0.25),
+                            Colors.white.withOpacity(0.0),
+                          ],
+                          
+                        ),
+                      ),
+                    ),
+                    title: Text(posts[index].title),
+                  //  subtitle: Text(posts[index].date),
+                  ),
+                  Text('Victor '),
+                  Text('Victor '),
+                  Text('Victor '),
+                  Text('Victor '),
+                  Text('Victor '),
+            /*       new ButtonTheme.bar(
+                    // make buttons use the appropriate styles for cards
+                    child: new ButtonBar(
+                      children: <Widget>[
+                        new FlatButton(
+                          child: Text('BUY TICKETS'),
+                          onPressed: () {/* ... */},
+                        ),
+                        new FlatButton(
+                          child: Text('LISTEN'),
+                          onPressed: () {/* ... */},
+                        ),
+                      ],
+                    ),
+                  ), */
+                ],
+              ),
             ),
           ],
         );
       },
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
