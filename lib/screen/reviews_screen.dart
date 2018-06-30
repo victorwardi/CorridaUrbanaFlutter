@@ -9,7 +9,6 @@ import 'package:share/share.dart';
 
 import 'package:corrida_urbana/model/post.dart';
 
-
 class ReviewsScreen extends StatefulWidget {
   ReviewsScreen({Key key, this.title}) : super(key: key);
 
@@ -68,7 +67,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     List posts = new List();
 
     try {
-        final response = await http.get(url);
+      final response = await http.get(url);
 
       //final response = await rootBundle.loadString('assets/jsons/posts.json');
 
@@ -84,7 +83,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   Widget _createListView(BuildContext context, List posts) {
     return new ListView.builder(
       padding: new EdgeInsets.all(0.0),
-      itemExtent: 160.0,
+      itemExtent: 120.0,
       itemCount: posts.length,
       itemBuilder: (BuildContext context, int index) {
         return new Column(
@@ -96,8 +95,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   Row(
                     children: <Widget>[
                       Container(
-                        width: 150.0,
-                        height: 140.0,
+                        width: 120.0,
+                        height: 110.0,
                         child: Image.network(
                           posts[index].image,
                           fit: BoxFit.fitHeight,
@@ -114,29 +113,31 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                 softWrap: true,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            ButtonTheme.bar(
-                              // make buttons use the appropriate styles for cards
-                              child: ButtonBar(
-                                children: <Widget>[
-                                  FlatButton(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.playlist_play),
-                                        Text('LER REVIEW'),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      _launchURL(posts[index].link);
-                                    },
+                            Row(
+                              children: <Widget>[
+                                FlatButton(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.playlist_play),
+                                      Text('Ver mais'),
+                                    ],
                                   ),
-                                  FlatButton(
-                                    child: Icon(Icons.share),
-                                    onPressed: () { Share.share('Confira o review no site Corrida Urbana: $posts[index].link');},
-                                  ),
-                                ],
-                              ),
+                                  onPressed: () {
+                                    _launchURL(posts[index].link);
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Icon(Icons.share),
+                                  onPressed: () {
+                                    var link = posts[index].link;
+                                    Share.share(
+                                        'Confira o review no site Corrida Urbana: $link');
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
