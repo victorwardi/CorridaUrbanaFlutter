@@ -12,7 +12,7 @@ dependencies:
   map_view: "^0.0.12"
   font_awesome_flutter: "^7.0.0"
   url_launcher: "^3.0.2"
-  share: "^0.5.2"
+  share: "^0.5.2" 
 
 dev_dependencies:
   flutter_test:

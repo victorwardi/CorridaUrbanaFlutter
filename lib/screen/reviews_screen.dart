@@ -2,26 +2,26 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart' show rootBundle;
+//import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
 import 'package:corrida_urbana/model/post.dart';
-import 'package:corrida_urbana/screen/post_screen.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+
+class ReviewsScreen extends StatefulWidget {
+  ReviewsScreen({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _ReviewsScreenState createState() => new _ReviewsScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ReviewsScreenState extends State<ReviewsScreen> {
   final String url =
-      "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed&fields=title,link,_embedded.wp:featuredmedia";
+      "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,_embedded.wp:featuredmedia&tags=66";
 
   Future<List> postsInternet;
 
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     child: Row(
                                       children: <Widget>[
                                         Icon(Icons.playlist_play),
-                                        Text('LER NOTÍCIA'),
+                                        Text('LER REVIEW'),
                                       ],
                                     ),
                                     onPressed: () {
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                   FlatButton(
                                     child: Icon(Icons.share),
-                                    onPressed: () { Share.share('Leia esta noticia do site Corrida Urbana: $posts[index].link');},
+                                    onPressed: () { Share.share('Confira o review no site Corrida Urbana: $posts[index].link');},
                                   ),
                                 ],
                               ),

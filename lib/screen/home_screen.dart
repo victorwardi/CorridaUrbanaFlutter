@@ -1,3 +1,4 @@
+import 'package:corrida_urbana/screen/reviews_screen.dart';
 import 'package:flutter/material.dart';
 import 'posts_screen.dart';
 import 'package:corrida_urbana/screen/calendar_screen.dart';
@@ -63,7 +64,33 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            MyHomePage(title: 'Corrida Urbana -  Corridas')),
+                            MyHomePage(title: 'Corrida Urbana -  Notícias')),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: RaisedButton.icon(
+                icon: new Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Icon(
+                    Icons.star,
+                    size: _iconSize,
+                    color: Colors.white,
+                  ),
+                ),
+                label: Text(
+                  "Reviews",
+                  style: _styleButton,
+                ),
+                color: Colors.teal,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ReviewsScreen(title: 'Corrida Urbana -  Reviews')),
                   );
                 },
               ),

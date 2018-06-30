@@ -18,8 +18,6 @@ class CorridasMeses extends StatelessWidget {
   final List<Mes> meses;
   final List<Corrida> corridas;
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Expanded(child: getListExpansion());

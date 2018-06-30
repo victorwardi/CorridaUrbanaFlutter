@@ -13,9 +13,9 @@ class CorridaDao {
 
     try {
 
-      //final response = await http.get("https://www.corridaurbana.com.br/wp-json/calendario/estado/" + estado);
-      final response = await rootBundle.loadString('assets/jsons/rj.json');
-      corridas = _buildCorridaList(response);
+      final response = await http.get("https://www.corridaurbana.com.br/wp-json/calendario/estado/" + estado);
+     // final response = await rootBundle.loadString('assets/jsons/rj.json');
+      corridas = _buildCorridaList(response.body);
 
     } catch (e) {
       print(e.toString());

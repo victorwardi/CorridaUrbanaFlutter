@@ -53,7 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      floatingActionButton: CalendarFilter(),
+     // floatingActionButton: CalendarFilter(),
       appBar: new AppBar(
         title: new Text(_title),
         actions: <Widget>[
@@ -61,16 +61,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
               padding: EdgeInsets.zero,
               tooltip: 'Clique aqui para mudar o estado.',
               child: Column(
-        
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left:20.0, right: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                     child: Text(
                       'Trocar UF',
-
                       style: TextStyle(
-                       
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
                           color: Colors.orangeAccent),
