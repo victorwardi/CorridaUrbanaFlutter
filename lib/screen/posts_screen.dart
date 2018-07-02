@@ -9,6 +9,7 @@ import 'package:share/share.dart';
 
 import 'package:corrida_urbana/model/post.dart';
 import 'package:corrida_urbana/screen/post_screen.dart';
+import '../dao/post_dao.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -20,8 +21,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String url =
-      "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed&fields=title,link,_embedded.wp:featuredmedia";
+  
 
   Future<List> postsInternet;
 
@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     setState(() {
-      this.postsInternet = this._getPosts();
+      this.postsInternet = new PostDao().getNews();
     });
   }
 
@@ -64,28 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<List> _getPosts() async {
-    List posts = new List();
-
-    try {
-        final response = await http.get(url);
-
-      //final response = await rootBundle.loadString('assets/jsons/posts.json');
-
-      final responseJson = json.decode(response.body);
-      posts = responseJson.map((post) => new Post.fromJson(post)).toList();
-    } catch (e) {
-      print(e.toString());
-    }
-
-    return posts;
-  }
 
   Widget _createListView(BuildContext context, List posts) {
     return new ListView.builder(
       padding: new EdgeInsets.all(0.0),
       itemExtent: 160.0,
-      itemCount: posts.length,
+      itemCount: posts == null ? 0 : posts.length ,
       itemBuilder: (BuildContext context, int index) {
         return new Column(
           children: <Widget>[

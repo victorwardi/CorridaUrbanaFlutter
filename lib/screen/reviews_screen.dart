@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
 import 'package:corrida_urbana/model/post.dart';
+import '../dao/post_dao.dart';
 
 class ReviewsScreen extends StatefulWidget {
   ReviewsScreen({Key key, this.title}) : super(key: key);
@@ -19,16 +20,13 @@ class ReviewsScreen extends StatefulWidget {
 }
 
 class _ReviewsScreenState extends State<ReviewsScreen> {
-  final String url =
-      "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,_embedded.wp:featuredmedia&tags=66";
-
   Future<List> postsInternet;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      this.postsInternet = this._getPosts();
+      this.postsInternet = new PostDao().getReviews();
     });
   }
 
@@ -61,23 +59,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         }
       },
     );
-  }
-
-  Future<List> _getPosts() async {
-    List posts = new List();
-
-    try {
-      final response = await http.get(url);
-
-      //final response = await rootBundle.loadString('assets/jsons/posts.json');
-
-      final responseJson = json.decode(response.body);
-      posts = responseJson.map((post) => new Post.fromJson(post)).toList();
-    } catch (e) {
-      print(e.toString());
-    }
-
-    return posts;
   }
 
   Widget _createListView(BuildContext context, List posts) {
@@ -113,7 +94,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                 softWrap: true,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             Row(
