@@ -31,13 +31,16 @@ class PostDao {
     try {
       initConnectivity();
       _connectivitySubscription = _connectivity.onConnectivityChanged
-          .listen((ConnectivityResult result) async {
+          .listen((ConnectivityResult result) {
         if (_connectionStatus != 'ConnectivityResult.none') {
-          final responseHttp = await http.get(url);
-          posts = _buildPostList(responseHttp.body);
+           http.get(url).then((responseHttp) {
+            posts = _buildPostList(responseHttp.body);
+        new AsyncSnapshot.withData(ConnectionState.done, posts);
+          });
         } else {
-          final responseFile = await rootBundle.loadString(file);
-          posts = _buildPostList(responseFile);
+          rootBundle.loadString(file).then((responseFile) {
+            posts = _buildPostList(responseFile);
+          });
         }
 
         _connectionStatus = result.toString();
