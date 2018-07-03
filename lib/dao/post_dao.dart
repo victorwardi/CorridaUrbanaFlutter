@@ -25,32 +25,40 @@ class PostDao {
         'assets/jsons/reviews.json');
   }
 
-  Future<List<Post>> getPosts(String url, String file) async {
+  List<Post> getReviewsSync() {
+    String url =
+        'https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,_embedded.wp:featuredmedia&tags=66';
+    String file = 'assets/jsons/reviews.json';
+
     List<Post> posts;
 
-    try {
-      initConnectivity();
-      _connectivitySubscription = _connectivity.onConnectivityChanged
-          .listen((ConnectivityResult result) {
-        if (_connectionStatus != 'ConnectivityResult.none') {
-           http.get(url).then((responseHttp) {
-            posts = _buildPostList(responseHttp.body);
-        new AsyncSnapshot.withData(ConnectionState.done, posts);
-          });
-        } else {
-          rootBundle.loadString(file).then((responseFile) {
-            posts = _buildPostList(responseFile);
-          });
-        }
+    http.get(url).then((responseHttp) {
+      posts = _buildPostList(responseHttp.body);
+    });
 
-        _connectionStatus = result.toString();
-
-        print(_connectionStatus);
-      });
-    } catch (e) {
-      print(e.toString());
-    }
     return posts;
+  }
+
+  Future<List<Post>> getPosts(String url, String file) async {
+    try {
+      final response = await http.get(url).catchError((onError) {
+        final responseLocal = rootBundle.loadString(file);
+        responseLocal.then((jsonString) {
+          return _buildPostList(jsonString);
+        });
+       
+      }).whenComplete(() {
+        print('completou!');
+      });
+      if (response.statusCode == 200) {
+        // If server returns an OK response, parse the JSON
+        return _buildPostList(response.body);
+      } else {
+        print('Deu merda!');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   List<Post> _buildPostList(String postsJson) {

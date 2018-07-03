@@ -65,7 +65,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     return new ListView.builder(
       padding: new EdgeInsets.all(0.0),
       itemExtent: 120.0,
-      itemCount: posts.length,
+      itemCount: posts == null? 0 : posts.length,
       itemBuilder: (BuildContext context, int index) {
         return new Column(
           children: <Widget>[

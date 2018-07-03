@@ -14,10 +14,13 @@ dependencies:
   url_launcher: "^3.0.2"
   share: "^0.5.2" 
   connectivity: "^0.3.1"
+  #flutter_launcher_icons: "^0.5.2"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
 
 
 # For information on the generic Dart part of this file, see the
