@@ -1,4 +1,4 @@
-import 'package:corrida_urbana/screen/reviews_screen.dart';
+import 'package:corrida_urbana/util/custom_decoration.dart';
 import 'package:flutter/material.dart';
 import 'posts_screen.dart';
 import 'package:corrida_urbana/screen/calendar_screen.dart';
@@ -15,88 +15,91 @@ class HomeScreen extends StatelessWidget {
       ),
 
       
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RaisedButton.icon(
-                icon: new Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Icon(
-                    Icons.directions_run,
-                    size: _iconSize,
-                    color: Colors.white,
+      body: Container(        
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: RaisedButton.icon(
+                  icon: new Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(
+                      Icons.directions_run,
+                      size: _iconSize,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                label: Text(
-                  "Corridas",
-                  style: _styleButton,
-                ),
-                color: Colors.teal,               
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CalendarScreen()),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RaisedButton.icon(
-                icon: new Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Icon(
-                    Icons.list,
-                    size: _iconSize,
-                    color: Colors.white,
+                  label: Text(
+                    "Corridas",
+                    style: _styleButton,
                   ),
+                  color: Colors.teal,               
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CalendarScreen()),
+                    );
+                  },
                 ),
-                label: Text(
-                  "Notícias",
-                  style: _styleButton,
-                ),
-                color: Colors.teal,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MyHomePage(title: 'Corrida Urbana -  Notícias')),
-                  );
-                },
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RaisedButton.icon(
-                icon: new Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Icon(
-                    Icons.star,
-                    size: _iconSize,
-                    color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: RaisedButton.icon(
+                  icon: new Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(
+                      Icons.list,
+                      size: _iconSize,
+                      color: Colors.white,
+                    ),
                   ),
+                  label: Text(
+                    "Notícias",
+                    style: _styleButton,
+                  ),
+                  color: Colors.teal,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PostsScreen(title: 'Corrida Urbana -  Notícias', postType: 'news',)),
+                    );
+                  },
                 ),
-                label: Text(
-                  "Reviews",
-                  style: _styleButton,
-                ),
-                color: Colors.teal,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ReviewsScreen(title: 'Corrida Urbana -  Reviews')),
-                  );
-                },
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: RaisedButton.icon(
+                  icon: new Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Icon(
+                      Icons.star,
+                      size: _iconSize,
+                      color: Colors.white,
+                    ),
+                  ),
+                  label: Text(
+                    "Reviews",
+                    style: _styleButton,
+                  ),
+                  color: Colors.teal,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                           PostsScreen(title: 'Corrida Urbana -  Reviews', postType: 'reviews',)),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
+        decoration: UtilDecoration.radialGradiente,
       ),
     );
   }

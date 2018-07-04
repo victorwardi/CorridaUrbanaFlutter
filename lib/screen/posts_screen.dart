@@ -1,26 +1,22 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
-import 'package:corrida_urbana/model/post.dart';
-import 'package:corrida_urbana/screen/post_screen.dart';
 import '../dao/post_dao.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class PostsScreen extends StatefulWidget {
+  PostsScreen({Key key, this.title, this.postType}) : super(key: key);
 
   final String title;
+  final String postType;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _PostsScreenState createState() => new _PostsScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PostsScreenState extends State<PostsScreen> {
   
 
   Future<List> postsInternet;
@@ -28,12 +24,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      this.postsInternet = new PostDao().getNews();
+    setState(() {     
+      this.postsInternet = widget.postType == 'news' ? new PostDao().getNews() : new PostDao().getReviews();
     });
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
@@ -64,33 +60,32 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
   Widget _createListView(BuildContext context, List posts) {
-    return new ListView.builder(
-      padding: new EdgeInsets.all(0.0),
-      itemExtent: 160.0,
-      itemCount: posts == null ? 0 : posts.length ,
+    return ListView.builder(
+      padding: EdgeInsets.all(0.0),
+      itemExtent: 380.0,
+      itemCount: posts == null ? 0 : posts.length,
       itemBuilder: (BuildContext context, int index) {
-        return new Column(
+        return Column(
           children: <Widget>[
-            new Card(
-              child: new Column(
+            Card(
+              child: Column(
                 // mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Container(
-                        width: 150.0,
-                        height: 140.0,
-                        child: Image.network(
-                          posts[index].image,
-                          fit: BoxFit.fitHeight,
-                          // alignment: Alignment.centerLeft,
-                        ),
-                      ),
                       Flexible(
                         child: Column(
                           children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              height: 250.0,
+                              child: posts[index].image != null
+                                  ? Image.network(posts[index].image,
+                                      fit: BoxFit.fitWidth)
+                                  : Image.asset('assets/images/temp.png',
+                                      fit: BoxFit.fitWidth),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
@@ -98,29 +93,42 @@ class _MyHomePageState extends State<MyHomePage> {
                                 softWrap: true,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            ButtonTheme.bar(
-                              // make buttons use the appropriate styles for cards
-                              child: ButtonBar(
-                                children: <Widget>[
-                                  FlatButton(
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.playlist_play),
-                                        Text('LER NOTÍCIA'),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      _launchURL(posts[index].link);
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Icon(Icons.share),
-                                    onPressed: () { Share.share('Leia esta noticia do site Corrida Urbana: $posts[index].link');},
-                                  ),
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                posts[index].date,
+                                
+                                style: TextStyle(
+                                    fontSize: 12.0,               ),
                               ),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                FlatButton(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.playlist_play),
+                                      Text('Ver mais'),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    _launchURL(posts[index].link);
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Icon(Icons.share),
+                                  onPressed: () {
+                                    var link = posts[index].link;
+                                    Share.share(
+                                        'Confira o review no site Corrida Urbana: $link');
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),

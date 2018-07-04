@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 printDailyNewsDigest() async {
   String news = await gatherNewsReports();
@@ -7,11 +8,13 @@ printDailyNewsDigest() async {
 }
 
 main() {
-  //printDailyNewsDigest();
-  printReviews();
-  printWinningLotteryNumbers();
-  printWeatherForecast();
-  printBaseballScore();
+  Intl.defaultLocale = 'pt_BR';
+DateTime data = DateTime.parse("2018-06-18T10:52:41");
+  var formatter = new DateFormat('yyyy-MM-dd');
+  String formatted = formatter.format(now);
+  print(formatted); // something like 2013-04-20
+print(data);
+
 }
 
 printWinningLotteryNumbers() {
