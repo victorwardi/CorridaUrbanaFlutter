@@ -63,7 +63,7 @@ class _PostsScreenState extends State<PostsScreen> {
   Widget _createListView(BuildContext context, List posts) {
     return ListView.builder(
       padding: EdgeInsets.all(0.0),
-      itemExtent: 380.0,
+      //itemExtent: 380.0,
       itemCount: posts == null ? 0 : posts.length,
       itemBuilder: (BuildContext context, int index) {
         return Column(
@@ -79,7 +79,7 @@ class _PostsScreenState extends State<PostsScreen> {
                           children: <Widget>[
                             Container(
                               width: double.infinity,
-                              height: 250.0,
+                              height: 200.0,
                               child: posts[index].image != null
                                   ? Image.network(posts[index].image,
                                       fit: BoxFit.fitWidth)
@@ -87,25 +87,24 @@ class _PostsScreenState extends State<PostsScreen> {
                                       fit: BoxFit.fitWidth),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: Text(
                                 posts[index].title,
                                 softWrap: true,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 22.0,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                posts[index].date,
-                                
+                              padding: const EdgeInsets.all(10.0),
+                              child: posts[index].date != '' ? Text(
+                                posts[index].date,                                
                                 style: TextStyle(
                                     fontSize: 12.0,               ),
-                              ),
+                              ) : Container(width: 0.0, height: 0.0,),
                             ),
                             Row(
                               children: <Widget>[

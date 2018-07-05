@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+
 
 printDailyNewsDigest() async {
   String news = await gatherNewsReports();
@@ -8,12 +10,19 @@ printDailyNewsDigest() async {
 }
 
 main() {
-  Intl.defaultLocale = 'pt_BR';
+
+ initializeDateFormatting();
+ Intl.defaultLocale = 'pt_BR';
+print( Intl.getCurrentLocale());
+
+
+ 
 DateTime data = DateTime.parse("2018-06-18T10:52:41");
-  var formatter = new DateFormat('yyyy-MM-dd');
-  String formatted = formatter.format(now);
-  print(formatted); // something like 2013-04-20
-print(data);
+
+
+
+  //print(new DateFormat("d 'de' MMMM 'de' yyyy').format(data));
+
 
 }
 

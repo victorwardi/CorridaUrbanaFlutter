@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 import '../model/post.dart';
@@ -10,13 +11,13 @@ class PostDao {
 
   Future<List<Post>> getNews() async {
     return getPosts(
-        'https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed&fields=title,link,_embedded.wp:featuredmedia',
+        'https://www.corridaurbana.com.br/wp-json/wp/v2/posts?&_embed&fields=title,link,date,_embedded.wp:featuredmedia',
         'assets/jsons/posts.json');
   }
 
   Future<List<Post>> getReviews() async {
     return getPosts(
-        "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,_embedded.wp:featuredmedia&tags=66",
+        "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,date,_embedded.wp:featuredmedia&tags=66",
         'assets/jsons/reviews.json');
   }
 
@@ -46,7 +47,16 @@ class PostDao {
         post.title = postJson['title']['rendered'];
       }
       if (postJson['date'] != null) {
-        post.date = postJson['date'];
+     
+        initializeDateFormatting();
+
+        DateTime date =  DateTime.parse(postJson['date']);
+
+         post.date = DateFormat("d 'de' MMMM 'de' yyyy", 'pt_BR').format(date); 
+
+         print(post.date);
+
+;
       }else{
         post.date = '';
       }

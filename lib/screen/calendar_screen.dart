@@ -124,7 +124,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           new CorridasMeses(corridas: todasCorridas, meses: meses),
         ],
       ),
-      decoration: UtilDecoration.radialGradiente,
+     // decoration: UtilDecoration.radialGradiente,
     );
   }
 }
