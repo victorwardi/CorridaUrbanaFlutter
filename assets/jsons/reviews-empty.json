@@ -1,0 +1,7 @@
+{
+    "code": "rest_post_invalid_page_number",
+    "message": "O número de páginas requisitado é maior que o número de páginas disponível.",
+    "data": {
+        "status": 400
+    }
+} 
