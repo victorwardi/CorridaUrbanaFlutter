@@ -16,7 +16,7 @@ class PostDao {
 
   Future<List<Post>> getReviews(int page) async {
     return _getPosts(
-        "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,date,_embedded.wp:featuredmedia&tags=66&page=${page}",
+        "https://www.corridaurbana.com.br/wp-json/wp/v2/posts?_embed&fields=title,link,date,_embedded.wp:featuredmedia,review&tags=66&page=${page}",
         'assets/jsons/reviews-empty.json');
        // 'assets/jsons/reviews.json');
   }
@@ -71,6 +71,10 @@ class PostDao {
         }
         if (postJson['link'] != null) {
           post.link = postJson['link'];
+        }
+
+         if (postJson['review'] != null) {
+          post.review = post.getReview(postJson['review']);
         }
 
         posts.add(post);

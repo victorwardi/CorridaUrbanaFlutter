@@ -9,7 +9,6 @@ import '../dao/post_dao.dart';
 
 class PostsScreen extends StatefulWidget {
   PostsScreen({Key key, this.title, this.postType}) : super(key: key);
-
   final String title;
   final String postType;
 
@@ -20,6 +19,8 @@ class PostsScreen extends StatefulWidget {
 class _PostsScreenState extends State<PostsScreen> {
   Future<List> postsInternet;
   List<Post> posts;
+
+  BuildContext scaffoldContext;
 
   String shareDescription;
   String readMoreText;
@@ -61,6 +62,7 @@ class _PostsScreenState extends State<PostsScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    this.page = 1;
     super.dispose();
   }
 
@@ -70,22 +72,35 @@ class _PostsScreenState extends State<PostsScreen> {
       this.page++;
 
       List<Post> morePosts = new List<Post>();
-      if (widget.postType == 'news1') {
+      if (widget.postType == 'news') {
         morePosts = await new PostDao().getNews(this.page);
       } else if (widget.postType == 'reviews') {
         morePosts = await new PostDao().getReviews(this.page);
       }
 
-  if (morePosts.isEmpty) {
-      double edge = 50.0;
-      double offsetFromBottom = _scrollController.position.maxScrollExtent - _scrollController.position.pixels;
-      if (offsetFromBottom < edge) {
-        _scrollController.animateTo(
-            _scrollController.offset - (edge -offsetFromBottom),
-            duration: new Duration(milliseconds: 500),
-            curve: Curves.easeOut);
+      if (morePosts.isEmpty) {
+        double edge = 300.0;
+        double offsetFromBottom = _scrollController.position.maxScrollExtent -
+            _scrollController.position.pixels;
+        if (offsetFromBottom < edge) {
+          _scrollController.animateTo(
+              _scrollController.offset - (edge - offsetFromBottom),
+              duration: new Duration(milliseconds: 500),
+              curve: Curves.easeOut);
+
+          final snackBar = SnackBar(
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Não há mais posts.'),
+            ),
+            backgroundColor: Colors.teal,
+            duration: Duration(seconds: 5),
+          );
+
+// Find the Scaffold in the Widget tree and use it to show a SnackBar
+          Scaffold.of(this.scaffoldContext).showSnackBar(snackBar);
+        }
       }
-    }
 
       setState(() {
         posts.addAll(morePosts);
@@ -95,21 +110,36 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   Widget _buildProgressIndicator() {
-    return  new Center(
-          child: new Opacity(
-            opacity: isPerformingRequest ? 1.0 : 0.0,
-            child: new CircularProgressIndicator(),
-          ),      
+    return Padding(
+      padding: const EdgeInsets.only(top: 100.0, bottom: 100.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: isPerformingRequest ? 1.0 : 0.0,
+          child: Column(
+            children: <Widget>[
+              new CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: Text('Carregando mais posts...'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(widget.title),
-        ),
-        body: Center(child: _buildScreen(context)));
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      body: Builder(builder: (BuildContext contextScafold) {
+        this.scaffoldContext = contextScafold;
+        return Center(child: _buildScreen(context));
+      }),
+    );
   }
 
   Widget _buildScreen(BuildContext context) {
@@ -128,7 +158,7 @@ class _PostsScreenState extends State<PostsScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: <Widget>[
-                    Expanded(child: _createListView(context, snapshot.data)),                    
+                    Expanded(child: _createListView(context, snapshot.data)),
                   ],
                 ),
               );
@@ -142,15 +172,14 @@ class _PostsScreenState extends State<PostsScreen> {
     return ListView.builder(
       padding: EdgeInsets.all(0.0),
       controller: _scrollController,
-      //itemExtent: 380.0,
+      // itemExtent: 370.0,
       itemCount: posts == null ? 0 : posts.length + 1,
       itemBuilder: (BuildContext context, int index) {
-print(index);
         if (index == (posts.length)) {
           //return Center(child: new CircularProgressIndicator());
-         return _buildProgressIndicator();
+          return _buildProgressIndicator();
         } else {
-        var titulo = '${index + 1} - ${posts[index].title} ';
+          var titulo = posts[index].title;
           return Column(
             children: <Widget>[
               Card(
@@ -171,6 +200,12 @@ print(index);
                                     : Image.asset('assets/images/temp.png',
                                         fit: BoxFit.fitWidth),
                               ),
+                              posts[index].review != null
+                                  ? _getReviewStars(posts[index].review)
+                                  : Container(
+                                      width: 0.0,
+                                      height: 0.0,
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 20.0),
                                 child: Text(
@@ -246,6 +281,37 @@ print(index);
     );
   }
 
+  Widget _getReviewStars(double totalStars) {
+    List<Widget> starList = new List();
+
+    int starInt = totalStars.toInt();
+
+    Color starColor = Colors.amberAccent;
+
+    //get all full stars
+    for (var i = 0; i < starInt; i++) {
+      starList.add(new Icon(Icons.star, color: starColor));
+    }
+
+    //get the rest of stars
+    double starRest = totalStars - starInt;
+
+    //get full star or half or empty star
+    if (starRest >= 0.25 && starRest < 0.75) {
+      starList.add(new Icon(Icons.star_half, color: starColor));
+    } else if (starRest >= 0.75) {
+      starList.add(new Icon(Icons.star, color: starColor));
+    } else if (totalStars != 5) {
+      starList.add(new Icon(Icons.star_border, color: starColor));
+    }
+
+    // this echo empty star
+    for (var i = 0; i < 4 - starInt; i++) {
+      starList.add(new Icon(Icons.star_border, color: starColor));
+    }
+
+    return Row(children: starList);
+  }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {

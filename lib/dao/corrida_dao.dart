@@ -29,9 +29,6 @@ class CorridaDao {
 
     final responseJson = json.decode(calendarioJson);  
 
-print(responseJson['status']);
-   
-
     for (var corridaJson in responseJson['corridas']) {
       Corrida corrida = new Corrida();   
 
