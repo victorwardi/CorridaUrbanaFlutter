@@ -1,3 +1,4 @@
+import 'package:corrida_urbana/screen/looping_screen.dart';
 import 'package:corrida_urbana/util/custom_decoration.dart';
 import 'package:flutter/material.dart';
 import 'posts_screen.dart';
@@ -19,88 +20,44 @@ class HomeScreen extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: RaisedButton.icon(
-                  icon: new Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.directions_run,
-                      size: _iconSize,
-                      color: Colors.white,
-                    ),
-                  ),
-                  label: Text(
-                    "Corridas",
-                    style: _styleButton,
-                  ),
-                  color: Colors.teal,               
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CalendarScreen()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: RaisedButton.icon(
-                  icon: new Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.list,
-                      size: _iconSize,
-                      color: Colors.white,
-                    ),
-                  ),
-                  label: Text(
-                    "Notícias",
-                    style: _styleButton,
-                  ),
-                  color: Colors.teal,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PostsScreen(title: 'Corrida Urbana -  Notícias', postType: 'news',)),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: RaisedButton.icon(
-                  icon: new Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.star,
-                      size: _iconSize,
-                      color: Colors.white,
-                    ),
-                  ),
-                  label: Text(
-                    "Reviews",
-                    style: _styleButton,
-                  ),
-                  color: Colors.teal,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                           PostsScreen(title: 'Corrida Urbana -  Reviews', postType: 'reviews',)),
-                    );
-                  },
-                ),
-              ),
+            children: <Widget>[              
+              buildButton(context, 'Teste', Icons.loop, Looping()),
+              buildButton(context, 'Corridas', Icons.directions_run, CalendarScreen()),
+              buildButton(context, 'Notícias', Icons.list, PostsScreen(title: 'Corrida Urbana -  Notícias', postType: 'news',)),
+              buildButton(context, 'Reviews', Icons.star, PostsScreen(title: 'Corrida Urbana -  Reviews', postType: 'reviews',)),
             ],
           ),
         ),
         decoration: UtilDecoration.radialGradiente,
       ),
     );
+  }
+
+  Padding buildButton(BuildContext context, String title, IconData icon, Widget page) {
+    return Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: RaisedButton.icon(
+                icon: new Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Icon(
+                    icon,
+                    size: _iconSize,
+                    color: Colors.white,
+                  ),
+                ),
+                label: Text(
+                  title,
+                  style: _styleButton,
+                ),
+                color: Colors.teal,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => page ),
+                  );
+                },
+              ),
+            );
   }
 }
