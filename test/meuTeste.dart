@@ -11,6 +11,26 @@ printDailyNewsDigest() async {
 
 main() {
 
+   List<int> items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+   items.insert(0, 10);
+   items.insert(0, 10);
+   items.insert(0, 10);
+   items.insert(0, 10);
+   items.insert(0, 10);
+
+   items.forEach((i) => print(i));
+
+  String a = 'Victor';
+
+  String b;
+
+  String c = 'Wardi';
+
+  c ??= a;
+
+  print(c);
+
  initializeDateFormatting();
  Intl.defaultLocale = 'pt_BR';
 print( Intl.getCurrentLocale());

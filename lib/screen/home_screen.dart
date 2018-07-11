@@ -7,7 +7,15 @@ import 'package:corrida_urbana/screen/calendar_screen.dart';
 const TextStyle _styleButton = TextStyle(fontSize: 20.0, color: Colors.white);
 const double _iconSize = 50.0;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  HomeScreenState createState() {
+    return new HomeScreenState();
+  }
+
+}
+
+class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +41,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  
   Padding buildButton(BuildContext context, String title, IconData icon, Widget page) {
     return Padding(
               padding: const EdgeInsets.all(12.0),
