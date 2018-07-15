@@ -3,7 +3,8 @@ class Post {
   String date;
   String title;
   String content;
-  String image;
+  int imageId;
+  int authorId;
   double review;
 
   double getReview(Map review) {

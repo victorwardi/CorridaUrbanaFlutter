@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:corrida_urbana/dao/author_.dao.dart';
+import 'package:corrida_urbana/dao/image_post_dao.dart';
+import 'package:corrida_urbana/model/author.dart';
+import 'package:corrida_urbana/model/image_post.dart';
 import 'package:corrida_urbana/model/post.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +22,7 @@ class PostsScreen extends StatefulWidget {
 
 class _PostsScreenState extends State<PostsScreen> {
   Future<List> postsInternet;
-  List<Post> posts;
+  List<Post> posts2 = [];
 
   BuildContext scaffoldContext;
 
@@ -36,16 +40,12 @@ class _PostsScreenState extends State<PostsScreen> {
     setState(() {
       if (widget.postType == 'news') {
         this.postsInternet = new PostDao().getNews(1);
-        new PostDao().getNews(1).then((posts) {
-          this.posts = posts;
-        });
+
         this.shareDescription = 'Confira mais no site Corrida Urbana: ';
         this.readMoreText = ' LER NOTÍCIA COMPLETA';
       } else if (widget.postType == 'reviews') {
         this.postsInternet = new PostDao().getReviews(1);
-        new PostDao().getReviews(1).then((posts) {
-          this.posts = posts;
-        });
+
         this.shareDescription = 'Confira o review no site Corrida Urbana: ';
         this.readMoreText = ' LER REVIEW COMPLETO';
       }
@@ -103,7 +103,7 @@ class _PostsScreenState extends State<PostsScreen> {
       }
 
       setState(() {
-        posts.addAll(morePosts);
+        postsInternet.then((posts) => posts.addAll(morePosts));
         isPerformingRequest = false;
       });
     }
@@ -167,12 +167,11 @@ class _PostsScreenState extends State<PostsScreen> {
     );
   }
 
-  Widget _createListView(BuildContext context, List posts) {
-    posts = this.posts;
+  Widget _createListView(BuildContext context, List<Post> posts) {
     return ListView.builder(
       padding: EdgeInsets.all(0.0),
       controller: _scrollController,
-      // itemExtent: 370.0,
+      itemExtent: 410.0,
       itemCount: posts == null ? 0 : posts.length + 1,
       itemBuilder: (BuildContext context, int index) {
         if (index == (posts.length)) {
@@ -192,80 +191,18 @@ class _PostsScreenState extends State<PostsScreen> {
                           child: Column(
                             children: <Widget>[
                               Container(
-                                width: double.infinity,
+                                color: Colors.grey,
                                 height: 200.0,
-                                child: posts[index].image != null
-                                    ? Image.network(posts[index].image,
-                                        fit: BoxFit.fitWidth)
-                                    : Image.asset('assets/images/temp.png',
-                                        fit: BoxFit.fitWidth),
-                              ),
-                              posts[index].review != null
-                                  ? _getReviewStars(posts[index].review)
-                                  : Container(
-                                      width: 0.0,
-                                      height: 0.0,
-                                    ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
-                                child: Text(
-                                  titulo,
-                                  softWrap: true,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: posts[index].date != '' &&
-                                        widget.postType == 'news'
-                                    ? Text(
-                                        posts[index].date,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 0.0,
-                                        height: 0.0,
-                                      ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Stack(
                                   children: <Widget>[
-                                    FlatButton(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(Icons.add_circle),
-                                          Text(this.readMoreText),
-                                        ],
-                                      ),
-                                      onPressed: () {
-                                        _launchURL(posts[index].link);
-                                      },
-                                    ),
-                                    Center(
-                                      child: FlatButton(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: Icon(Icons.share),
-                                        onPressed: () {
-                                          var link = posts[index].link;
-                                          Share.share(
-                                              this.shareDescription + link);
-                                        },
-                                      ),
-                                    ),
+                                    _getPostImage(posts[index].imageId),
+                                    _getReviewStars(posts[index]),
                                   ],
                                 ),
                               ),
+                              _getTitle(titulo),
+                              _getAuthorDate(posts[index]),
+                              _getMenu(posts[index]),
                             ],
                           ),
                         ),
@@ -281,7 +218,156 @@ class _PostsScreenState extends State<PostsScreen> {
     );
   }
 
-  Widget _getReviewStars(double totalStars) {
+  Widget _getMenu(Post post) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          FlatButton(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.add_circle),
+                Text(this.readMoreText),
+              ],
+            ),
+            onPressed: () {
+              _launchURL(post.link);
+            },
+          ),
+          Center(
+            child: FlatButton(
+              padding: EdgeInsets.all(10.0),
+              child: Icon(Icons.share),
+              onPressed: () {
+                var link = post.link;
+                Share.share(this.shareDescription + link);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getAuthorDate(Post post) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          _getAuthor(post.authorId),
+          post.date != '' && widget.postType == 'news'
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.date_range,
+                      color: Colors.grey[700],
+                    ),
+                    Text(
+                      post.date,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ],
+                )
+              : Container(
+                  width: 0.0,
+                  height: 0.0,
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getTitle(String titulo) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20.0,
+        left: 10.0,
+        right: 10.0,
+      ),
+      child: Container(
+        alignment: Alignment.center,
+        height: 40.0,
+       
+        child: Text(
+          titulo,
+          softWrap: true,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.justify,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _imageBox(Widget imageWidget) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(width: double.infinity, child: imageWidget),
+        ),
+      ],
+    );
+  }
+
+  Widget _getPostImage(int imageId) {
+    var postImgWidget;
+    try {
+      postImgWidget = FutureBuilder(
+          future: ImagePostDao().getImage(imageId),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            ImagePost image = snapshot.data;
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return _imageBox(Stack(
+                  fit: StackFit.expand,
+                  // fit: StackFit.expand,
+                  children: <Widget>[
+                    Image.asset('assets/images/temp.png',
+                        fit: BoxFit.fitHeight),
+                    Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                      ),
+                    ),
+                  ],
+                ));
+
+              default:
+                if (snapshot.hasError) {
+                  return new Text('Error: ${snapshot.error}');
+                } else {
+                  return _imageBox(image.url != null
+                      ? Image.network(image.url, fit: BoxFit.fitWidth)
+                      : Image.asset('assets/images/temp.png',
+                          fit: BoxFit.fitWidth));
+                }
+            }
+          });
+    } catch (e) {
+      print(e);
+    }
+    return postImgWidget;
+  }
+
+  Widget _getReviewStars(Post post) {
+    if (post.review == null) {
+      return Container(
+        width: 0.0,
+        height: 0.0,
+      );
+    }
+
+    double totalStars = post.review;
+
     List<Widget> starList = new List();
 
     int starInt = totalStars.toInt();
@@ -310,7 +396,114 @@ class _PostsScreenState extends State<PostsScreen> {
       starList.add(new Icon(Icons.star_border, color: starColor));
     }
 
-    return Row(children: starList);
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Center(child: Row(children: starList)),
+        ],
+      ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: <Color>[
+              Colors.black.withOpacity(1.0),
+              Colors.black.withOpacity(0.0),
+              Colors.black.withOpacity(0.0),
+            ]),
+      ),
+    );
+  }
+
+  Widget _getAuthor(int authorId) {
+    var postAuthorWidget;
+
+    try {
+      postAuthorWidget = Container(
+        //width: 100.0,
+        height: 55.0,
+        child: FutureBuilder(
+            future: AuthorDao().getAuthor(authorId),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if(snapshot.hasData){
+
+             
+              Author author = snapshot.data;
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                 return Row(
+                   children: <Widget>[
+                     new Container(
+                              width: 50.0,
+                              height: 50.0,
+                              decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey ,                            
+                              ),
+                              child: Icon(Icons.person),
+                            ),
+                            Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('carregando autor...'),
+                        ),
+                   ],
+                 );
+                    
+
+                default:
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  } else {
+                    return Row(
+                      children: <Widget>[
+                        new Container(
+                          width: 50.0,
+                          height: 50.0,
+                          decoration: new BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: new DecorationImage(
+                              fit: BoxFit.fill,
+                              image: new NetworkImage(
+                                author.avatar,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(author.name),
+                        ),
+                      ],
+                    );
+                  }
+              }
+             }else{
+               return Row(
+                   children: <Widget>[
+                     new Container(
+                              width: 50.0,
+                              height: 50.0,
+                              decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey ,                            
+                              ),
+                              child: Icon(Icons.person),
+                            ),
+                            Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('carregando autor...'),
+                        ),
+                   ],
+                 );
+             }}),
+      );
+    } catch (e) {
+      print(e);
+    }
+    return postAuthorWidget;
   }
 
   _launchURL(String url) async {
