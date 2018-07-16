@@ -5,7 +5,7 @@ import 'package:share/share.dart';
 
 import '../model/corrida.dart';
 
-var MAP_API_KEY = "AIzaSyBTjNYNzWAsFzlgd7qewvbUBK87gidS-YA";
+const MAP_API_KEY = "AIzaSyBTjNYNzWAsFzlgd7qewvbUBK87gidS-YA";
 
 class CorridaDetail extends StatefulWidget {
   final Corrida corrida;

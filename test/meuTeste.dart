@@ -27,7 +27,7 @@ main() {
 
   String c = 'Wardi';
 
-  c ??= a;
+  c ??= b;
 
   print(c);
 

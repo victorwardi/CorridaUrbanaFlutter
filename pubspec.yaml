@@ -42,6 +42,7 @@ flutter:
     - assets/jsons/rj.json
     - assets/jsons/posts.json
     - assets/jsons/reviews.json
+    - assets/jsons/posts_list.json
     - assets/jsons/reviews-empty.json
     - assets/images/temp.png
     - assets/images/tenis.jpg

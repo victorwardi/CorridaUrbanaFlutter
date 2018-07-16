@@ -1,4 +1,5 @@
 class Post {
+  int id;
   String link;
   String date;
   String title;

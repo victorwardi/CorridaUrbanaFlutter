@@ -1,4 +1,5 @@
 import 'package:corrida_urbana/screen/carousel.dart';
+import 'package:corrida_urbana/screen/converter_screen.dart';
 import 'package:corrida_urbana/screen/looping_screen.dart';
 import 'package:corrida_urbana/util/custom_decoration.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[              
-              buildButton(context, 'Carrousel', Icons.all_inclusive, Carroussel()),
+              buildButton(context, 'Carrousel', Icons.all_inclusive, ConverterPaceScreen()),
               buildButton(context, 'Looping', Icons.loop, Looping()),
               buildButton(context, 'Corridas', Icons.directions_run, CalendarScreen()),
               buildButton(context, 'Notícias', Icons.list, PostsScreen(title: 'Corrida Urbana -  Notícias', postType: 'news',)),

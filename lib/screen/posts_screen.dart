@@ -137,12 +137,18 @@ class _PostsScreenState extends State<PostsScreen> {
       ),
       body: Builder(builder: (BuildContext contextScafold) {
         this.scaffoldContext = contextScafold;
+
+        
         return Center(child: _buildScreen(context));
       }),
     );
   }
 
   Widget _buildScreen(BuildContext context) {
+
+
+
+    
     return new FutureBuilder(
       future: postsInternet,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -294,7 +300,6 @@ class _PostsScreenState extends State<PostsScreen> {
       child: Container(
         alignment: Alignment.center,
         height: 40.0,
-       
         child: Text(
           titulo,
           softWrap: true,
@@ -323,34 +328,37 @@ class _PostsScreenState extends State<PostsScreen> {
       postImgWidget = FutureBuilder(
           future: ImagePostDao().getImage(imageId),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            ImagePost image = snapshot.data;
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return _imageBox(Stack(
-                  fit: StackFit.expand,
-                  // fit: StackFit.expand,
-                  children: <Widget>[
-                    Image.asset('assets/images/temp.png',
-                        fit: BoxFit.fitHeight),
-                    Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+        
+              ImagePost image = snapshot.data;
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return _imageBox(Stack(
+                    fit: StackFit.expand,
+                    // fit: StackFit.expand,
+                    children: <Widget>[
+                      Image.asset('assets/images/temp.png',
+                          fit: BoxFit.fitWidth),
+                      Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.grey),
+                        ),
                       ),
-                    ),
-                  ],
-                ));
+                    ],
+                  ));
 
-              default:
-                if (snapshot.hasError) {
-                  return new Text('Error: ${snapshot.error}');
-                } else {
-                  return _imageBox(image.url != null
-                      ? Image.network(image.url, fit: BoxFit.fitWidth)
-                      : Image.asset('assets/images/temp.png',
-                          fit: BoxFit.fitWidth));
-                }
-            }
+                default:
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  } else {
+                    return _imageBox((image != null && image.url != null)
+                        ? Image.network(image.url, fit: BoxFit.fitWidth)
+                        : Image.asset('assets/images/temp.png',
+                            fit: BoxFit.fitWidth));
+                  }
+              }
+           
           });
     } catch (e) {
       print(e);
@@ -427,36 +435,11 @@ class _PostsScreenState extends State<PostsScreen> {
         child: FutureBuilder(
             future: AuthorDao().getAuthor(authorId),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.hasData){
-
-             
-              Author author = snapshot.data;
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                 return Row(
-                   children: <Widget>[
-                     new Container(
-                              width: 50.0,
-                              height: 50.0,
-                              decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey ,                            
-                              ),
-                              child: Icon(Icons.person),
-                            ),
-                            Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('carregando autor...'),
-                        ),
-                   ],
-                 );
-                    
-
-                default:
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
-                  } else {
+         
+                Author author = snapshot.data;
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                  case ConnectionState.waiting:
                     return Row(
                       children: <Widget>[
                         new Container(
@@ -464,41 +447,49 @@ class _PostsScreenState extends State<PostsScreen> {
                           height: 50.0,
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
-                            image: new DecorationImage(
-                              fit: BoxFit.fill,
-                              image: new NetworkImage(
-                                author.avatar,
-                              ),
-                            ),
+                            color: Colors.grey,
                           ),
+                          child: Icon(Icons.person),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(author.name),
+                        Container(
+                          width: 100.0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: LinearProgressIndicator(),
+                          ),
                         ),
                       ],
                     );
-                  }
-              }
-             }else{
-               return Row(
-                   children: <Widget>[
-                     new Container(
-                              width: 50.0,
-                              height: 50.0,
-                              decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey ,                            
+
+                  default:
+                    if (snapshot.hasError || author == null ) {
+                      return new Text('');
+                    } else {
+                      return Row(
+                        children: <Widget>[
+                          new Container(
+                            width: 50.0,
+                            height: 50.0,
+                            decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                fit: BoxFit.fill,
+                                image: new NetworkImage(
+                                  author.avatar,
+                                ),
                               ),
-                              child: Icon(Icons.person),
                             ),
-                            Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('carregando autor...'),
-                        ),
-                   ],
-                 );
-             }}),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(author.name),
+                          ),
+                        ],
+                      );
+                    }
+                }
+       
+            }),
       );
     } catch (e) {
       print(e);

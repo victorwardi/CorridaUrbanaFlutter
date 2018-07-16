@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:corrida_urbana/dao/corrida_dao.dart';
-import 'package:corrida_urbana/util/custom_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../model/corrida.dart';
 import '../model/mes.dart';
 import '../widget/meses_widget.dart';
-import 'calendar_filter_modal.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
