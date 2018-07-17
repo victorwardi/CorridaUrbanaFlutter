@@ -6,7 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class ImagePostDao {
   Future<ImagePost> getImage(int id) async {
     String url = 'https://www.corridaurbana.com.br/wp-json/wp/v2/media/$id?&fields=id,media_details.sizes.full';
-await new Future.delayed(Duration(seconds: 5));
+//await new Future.delayed(Duration(seconds: 5));
 
     ImagePost image = new ImagePost();
 

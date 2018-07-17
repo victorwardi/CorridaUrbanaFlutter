@@ -10,7 +10,7 @@ class AuthorDao {
         'https://www.corridaurbana.com.br/wp-json/wp/v2/users/$id?fields=name,avatar_urls.96';
 
     Author author;
-await new Future.delayed(Duration(seconds: 5));
+//await new Future.delayed(Duration(seconds: 5));
     try {
       CacheManager.showDebugLogs = true;
       var cacheManager = await CacheManager.getInstance();
