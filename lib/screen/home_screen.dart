@@ -31,7 +31,7 @@ class HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[              
-              buildButton(context, 'Carrousel', Icons.all_inclusive, ConverterPaceScreen()),
+              buildButton(context, 'Pace Converter', Icons.compare_arrows, ConverterPaceScreen()),
               buildButton(context, 'Looping', Icons.loop, Looping()),
               buildButton(context, 'Corridas', Icons.directions_run, CalendarScreen()),
               buildButton(context, 'Notícias', Icons.list, PostsScreen(title: 'Corrida Urbana -  Notícias', postType: 'news',)),
