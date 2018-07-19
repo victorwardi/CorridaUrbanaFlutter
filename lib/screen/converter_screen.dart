@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:corrida_urbana/util/custom_swiper.dart';
+import 'package:corrida_urbana/util/text_shadowed.dart';
 import 'package:flutter/material.dart';
 
 class ConverterPaceScreen extends StatefulWidget {
@@ -56,69 +57,72 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
 
     return Scaffold(
       key: scaffoldKey,
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Pace Converter'),
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text('Distância:'),
-                DropdownButton(
-                    value: this.distance,
-                    hint: Text('Selecione'),
-                    items: this.distancesDropdown,
-                    onChanged: (distanceSelect) {
-                      setState(() {
-                        this.distance = distanceSelect;
-                        if (distanceSelect.label == 'Personalizado') {
-                          this.showCustomDistance = true;
-                        }
-                      });
-                    }),
-              ],
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text('Distância:'),
+                  DropdownButton(
+                
+                      value: this.distance,
+                      hint: Text('Selecione'),
+                      
+                      items: this.distancesDropdown,
+                      onChanged: (distanceSelect) {
+                        setState(() {
+                          this.distance = distanceSelect;
+                          this.showCustomDistance =
+                              distanceSelect.label == 'Personalizado';
+                        });
+                      }),
+                ],
+              ),
             ),
-          ),
-          showCustomDistance ? _buildCustomDistance() : Container(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: _buildTimeSwiper(),
-          ),
-          FlatButton(
-              padding: EdgeInsets.all(20.0),
-              child: Container(
-                  color: Colors.teal,
-                  width: double.infinity,
-                  child: Transform.rotate(
-                    angle: pi / 2,
-                    child: Icon(
-                      Icons.compare_arrows,
-                      size: 50.0,
-                    ),
-                  )),
-              onPressed: () {
-                setState(() {
-                  showResult = true;
-                });
-              }),
-          showResult ? result() : Container()
-        ],
+            showCustomDistance ? _buildCustomDistance() : Container(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: _buildTimeSwiper(),
+            ),
+            FlatButton(
+                padding: EdgeInsets.all(20.0),
+                child: Container(
+                    color: Colors.teal,
+                    width: double.infinity,
+                    child: Transform.rotate(
+                      angle: pi / 2,
+                      child: Icon(
+                        Icons.compare_arrows,
+                        size: 50.0,
+                      ),
+                    )),
+                onPressed: () {
+                  setState(() {
+                    showResult = true;
+                  });
+                }),
+            showResult ? result() : Container()
+          ],
+        ),
       ),
     );
   }
 
+
   ///Convert distance and time to pace per km
   Widget result() {
+    this.showResult = false;
+
     if (this.distance == null || this.distance.value == 0.0) {
       _showMessage('Informe uma distância válida!');
       return Container();
-      return Text(
-        '',
-        style: TextStyle(color: Colors.red, fontSize: 20.0),
-      );
     }
     if (this.hours == 0.0 && this.mins == 0.0 && this.secs == 0.0) {
       return Text(
@@ -159,26 +163,44 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
     //Format string o have a zero before an unique number
     String secondsFormatted = '$secondsMinutesPerKm'.padLeft(2, '0');
 
-    TextStyle styleDescription = TextStyle(fontWeight: FontWeight.bold);
-    TextStyle styleResult = TextStyle(fontWeight: FontWeight.bold);
-
-    return Card(
-      margin: EdgeInsets.all(0.0),
-      child: FittedBox(
-        fit: BoxFit.fill,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Seu Pace para ${distance.label}: ',
-              style: styleDescription,
-              textScaleFactor: queryData.textScaleFactor,
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: TextShadowed(
+                  text: 'Seu pace é:',
+                  textColor: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  size: 20.0,
+                ),
+              ),
+              Center(
+                child: TextShadowed(
+                  text: '$minutesPerKmIntegers:$secondsFormatted min/km',
+                  textColor: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  size: 50.0,
+                ),
+              ),
+            ],
+          ), //mainAxisSize: MainAxisSize.max,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            gradient: new RadialGradient(
+              center: Alignment.center,
+              radius: 1.0,
+              colors: [
+                Color.fromRGBO(0, 200, 170, 1.0),
+                Color.fromRGBO(0, 130, 120, 1.0),
+              ],
             ),
-            Text(
-              '$minutesPerKmIntegers:$secondsFormatted min/km',
-              style: styleResult,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -223,6 +245,7 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: TextField(
+       // inputFormatters: ,
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         decoration:
             InputDecoration(labelText: 'Informe a distância em km (Ex 10.00:)'),
@@ -244,6 +267,6 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
     );
 
 // Find the Scaffold in the Widget tree and use it to show a SnackBar
-   scaffoldKey.currentState.showSnackBar(snackBar);
+    scaffoldKey.currentState.showSnackBar(snackBar);
   }
 }
