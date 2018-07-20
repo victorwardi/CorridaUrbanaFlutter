@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:corrida_urbana/util/custom_swiper.dart';
+import 'package:corrida_urbana/util/text_formater.dart';
 import 'package:corrida_urbana/util/text_shadowed.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_formatter/mask_formatter.dart';
 
 class ConverterPaceScreen extends StatefulWidget {
   @override
@@ -24,6 +27,8 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
   bool showCustomDistance = false;
 
   double customDistance = 0.0;
+
+  FocusNode focusCustomField = FocusNode();
 
   static final List<ItemSwiper> distances = [
     ItemSwiper('1k', 1.0),
@@ -51,6 +56,8 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
     return times;
   }
 
+  var controller = new MaskedTextController(mask: '00.00');
+
   @override
   Widget build(BuildContext context) {
     this.queryData = MediaQuery.of(context);
@@ -71,16 +78,17 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
                 children: <Widget>[
                   Text('Distância:'),
                   DropdownButton(
-                
                       value: this.distance,
                       hint: Text('Selecione'),
-                      
                       items: this.distancesDropdown,
                       onChanged: (distanceSelect) {
                         setState(() {
                           this.distance = distanceSelect;
                           this.showCustomDistance =
                               distanceSelect.label == 'Personalizado';
+                          FocusScope
+                              .of(context)
+                              .requestFocus(this.focusCustomField);
                         });
                       }),
                 ],
@@ -114,7 +122,6 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
       ),
     );
   }
-
 
   ///Convert distance and time to pace per km
   Widget result() {
@@ -242,19 +249,22 @@ class _ConverterScreenState extends State<ConverterPaceScreen> {
   }
 
   Widget _buildCustomDistance() {
+ 
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: TextField(
-       // inputFormatters: ,
+        focusNode: focusCustomField,
+        controller: this.controller,       
         keyboardType: TextInputType.numberWithOptions(decimal: true),
-        decoration:
-            InputDecoration(labelText: 'Informe a distância em km (Ex 10.00:)'),
-        onChanged: (distanceTyped) {
-          this.distance.value = double.tryParse(distanceTyped) ?? 0.0;
+        decoration: InputDecoration(labelText: 'Informe a distância em km (Ex 10.00:)' , hintText: '__.__'),
+        onChanged: (distanceTyped){
+          this.distance.value = double.tryParse(distanceTyped);
         },
       ),
     );
   }
+
+ 
 
   _showMessage(String msg) {
     final snackBar = SnackBar(

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 
 
 printDailyNewsDigest() async {
@@ -11,37 +9,11 @@ printDailyNewsDigest() async {
 
 main() {
 
-   List<int> items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-   items.insert(0, 10);
-   items.insert(0, 10);
-   items.insert(0, 10);
-   items.insert(0, 10);
-   items.insert(0, 10);
+Stopwatch stopwatch = new Stopwatch();
+stopwatch.start();
 
-   items.forEach((i) => print(i));
-
-  String a = 'Victor';
-
-  String b;
-
-  String c = 'Wardi';
-
-  c ??= b;
-
-  print(c);
-
- initializeDateFormatting();
- Intl.defaultLocale = 'pt_BR';
-print( Intl.getCurrentLocale());
-
-
- 
-DateTime data = DateTime.parse("2018-06-18T10:52:41");
-
-
-
-  //print(new DateFormat("d 'de' MMMM 'de' yyyy').format(data));
+print(stopwatch.elapsedMilliseconds);
 
 
 }
